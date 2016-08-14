@@ -5,7 +5,7 @@
 #include <QMutex>
 
 #include "WebLoader.h"
-#include "networkrequestinternal.h"
+#include "NetworkRequestInternal.h"
 
 /*!
  * \brief Класс, реализующий очередь запросов

@@ -1,4 +1,4 @@
-#include "networkrequest.h"
+#include "NetworkRequest.h"
 
 NetworkRequest::NetworkRequest(QObject * _parent, QNetworkCookieJar * _jar)
     : QObject(_parent), internal(_parent, _jar)
@@ -70,7 +70,7 @@ void NetworkRequest::addRequestAttributeFile(QString name, QString filePath)
     internal.m_request->addAttribute(name, filePath);
 }
 
-void NetworkRequest::loadAsync(QString urlToLoad, QUrl referer)
+vod NetworkRequest::loadAsync(QString urlToLoad, QUrl referer)
 {
     loadAsync(QUrl(urlToLoad), referer);
 }

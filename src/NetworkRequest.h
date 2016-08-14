@@ -4,8 +4,8 @@
 #include <QEventLoop>
 #include <QTimer>
 
-#include "networkqueue.h"
-#include "networkrequestinternal.h"
+#include "NetworkQueue.h"
+#include "NetworkRequestInternal.h"
 
 /*!
  * \brief Пользовательский класс для создания GET и POST запросов
