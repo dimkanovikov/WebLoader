@@ -74,6 +74,7 @@ public:
 	  */
 	void addRequestAttributeFile( QString name,
 								  QString filePath );
+    void setWebRequest(WebRequest *request);
 	/*!
 	  \fn Отправка запроса (асинхронное выполнение)
 	  \param urlToLoad - ссылка для запроса
@@ -98,6 +99,12 @@ public:
 	QString lastError() const;
 	QString lastErrorDetails() const;
 
+
+    /**
+     * @brief Остановить выполнение
+     */
+    void stop();
+
 signals:
 	/*!
 	  \fn Прогресс отправки запроса на сервер
@@ -113,13 +120,14 @@ signals:
 	  \fn Данные загружены
 	  \param Загруженные данные
 	  */
+    void downloadComplete( WebLoader* );
 	void downloadComplete( QByteArray );
 	void downloadComplete( QString );
 	/*!
 	  \fn Сигнал об ошибке
 	  \param Текст ошибки
 	  */
-	void error( QString );
+    void error( QString );
 
 
 //*****************************************************************************
@@ -131,10 +139,6 @@ private:
 	  */
 	void run();
 
-    /**
-     * @brief Остановить выполнение
-     */
-    void stop();
 
 private slots:
 	/*!
@@ -176,7 +180,7 @@ private:
 private:
 	QNetworkAccessManager * m_networkManager;
 	QNetworkCookieJar * m_cookieJar;
-	WebRequest * m_request;
+    WebRequest *m_request;
 	RequestMethod m_requestMethod;
 	bool m_isNeedRedirect;
 

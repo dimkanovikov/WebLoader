@@ -5,7 +5,7 @@
 #include <QtCore/QFile>
 
 
-HttpPart::HttpPart( HttpPartType type ) :
+HttpPart::HttpPart(HttpPartType type) :
 	m_type( type )
 {
 
@@ -16,16 +16,16 @@ HttpPart::HttpPartType HttpPart::type() const
 	return m_type;
 }
 
-void HttpPart::setText( const QString name, const QString value )
+void HttpPart::setText(const QString name, const QString value)
 {
-	setName( name );
-	setValue( value );
+    setName(name);
+    setValue(value);
 }
 
-void HttpPart::setFile( const QString name, const QString filePath )
+void HttpPart::setFile(const QString name, const QString filePath)
 {
-	setName( name );
-	setFilePath( filePath );
+    setName(name);
+    setFilePath(filePath);
 }
 
 QString HttpPart::name() const
@@ -50,29 +50,29 @@ QString HttpPart::filePath() const
 
 
 
-void HttpPart::setName( const QString name )
+void HttpPart::setName(const QString name)
 {
-	if ( m_name != name )
+    if (m_name != name)
 		m_name = name;
 }
 
-void HttpPart::setValue( const QString value )
+void HttpPart::setValue(const QString value)
 {
-	if ( m_value != value )
+    if (m_value != value)
 		m_value = value;
 }
 
-void HttpPart::setFileName( const QString fileName )
+void HttpPart::setFileName(const QString fileName)
 {
-	setValue( fileName );
+    setValue(fileName);
 }
 
-void HttpPart::setFilePath( const QString filePath )
+void HttpPart::setFilePath(const QString filePath)
 {
-	if ( m_filePath != filePath ) {
+    if (m_filePath != filePath) {
 		m_filePath = filePath;
 		QString fileName = filePath.split('/').last();
-		setFileName( fileName );
+        setFileName(fileName);
 	}
 }
 

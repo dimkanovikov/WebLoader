@@ -14,10 +14,10 @@ public:
 	};
 
 public:
-	HttpPart( HttpPartType type = Text );
+    HttpPart(HttpPartType type = Text);
 	HttpPartType type() const;
-	void setText( const QString name, const QString value );
-	void setFile( const QString name, const QString filePath );
+    void setText(const QString name, const QString value);
+    void setFile(const QString name, const QString filePath);
 
 public:
 	QString name() const;
@@ -27,10 +27,10 @@ public:
 
 
 private:
-	void setName( const QString name );
-	void setValue( const QString value );
-	void setFileName( const QString fileName );
-	void setFilePath( const QString filePath );
+    void setName(const QString name);
+    void setValue(const QString value);
+    void setFileName(const QString fileName);
+    void setFilePath(const QString filePath);
 
 private:
 	HttpPartType m_type;
@@ -49,9 +49,9 @@ public:
 	QByteArray data();
 
 private:
-	QByteArray makeDataFromPart( HttpPart part );
-	QByteArray makeDataFromTextPart( HttpPart part );
-	QByteArray makeDataFromFilePart( HttpPart part );
+    QByteArray makeDataFromPart(HttpPart part);
+    QByteArray makeDataFromTextPart(HttpPart part);
+    QByteArray makeDataFromFilePart(HttpPart part);
 	QByteArray makeEndData();
 
 private:
