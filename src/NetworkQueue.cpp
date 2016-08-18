@@ -7,8 +7,8 @@ NetworkQueue::NetworkQueue()
     // И сразу же соединим их со слотом данного класса, обозначающим завершение
     //
     for (int i = 0; i != qMax(QThread::idealThreadCount(), 4); ++i) {
-        freeWL.push_back(new WebLoader(this));
-        connect(freeWL.back(), SIGNAL(downloadComplete(WebLoader*)), this, SLOT(downloadComplete(WebLoader*)));
+        m_freeLoaders.push_back(new WebLoader(this));
+        connect(m_freeLoaders.back(), SIGNAL(downloadComplete(WebLoader*)), this, SLOT(downloadComplete(WebLoader*)));
     }
 }
 
@@ -17,79 +17,79 @@ NetworkQueue* NetworkQueue::getInstance() {
     return &queue;
 }
 
-void NetworkQueue::put(NetworkRequestInternal *request) {
-    mtx.lock();
+void NetworkQueue::put(NetworkRequestInternal* _request) {
+    m_mtx.lock();
     //
     // Положим в очередь пришедший запрос
     //
-    queue.push_back(request);
-    inQueue.insert(request);
+    m_queue.push_back(_request);
+    m_inQueue.insert(_request);
 
     //
     // В случае, если есть свободный WebLoader
     // Извлечем пришедший запрос из очереди и начнем выполнять его
     //
-    if (!freeWL.empty()) {
+    if (!m_freeLoaders.empty()) {
         pop();
     }
-    mtx.unlock();
+    m_mtx.unlock();
 }
 
 void NetworkQueue::pop() {
     //
     // Извлечем свободный WebLoader
     //
-    WebLoader* wl = freeWL.front();
-    freeWL.pop_front();
+    WebLoader* loader = m_freeLoaders.front();
+    m_freeLoaders.pop_front();
 
     //
     // Извлечем первый запрос на обработку
     //
-    NetworkRequestInternal *r = queue.front();
-    queue.pop_front();
-    inQueue.remove(r);
+    NetworkRequestInternal *request = m_queue.front();
+    m_queue.pop_front();
+    m_inQueue.remove(request);
 
     //
     // Настроим WebLoader на запрос
     //
-    usedWL[wl] = r;
-    setWLParams(wl, r);
+    m_busyLoaders[loader] = request;
+    setLoaderParams(loader, request);
 
     //
     // Соединим сигналы WebLoader'а с сигналами класса запроса
     //
-    connect(wl, SIGNAL(downloadComplete(QByteArray)), r, SIGNAL(downloadComplete(QByteArray)));
-    connect(wl, SIGNAL(downloadComplete(QString)), r, SIGNAL(downloadComplete(QString)));
-    connect(wl, SIGNAL(uploadProgress(int)), r, SIGNAL(uploadProgress(int)));
-    connect(wl, SIGNAL(downloadProgress(int)), r, SIGNAL(downloadProgress(int)));
-    connect(wl, SIGNAL(error(QString)), r, SIGNAL(error(QString)));
-    connect(wl, SIGNAL(finished()), r, SIGNAL(finished()));
+    connect(loader, SIGNAL(downloadComplete(QByteArray)), request, SIGNAL(downloadComplete(QByteArray)));
+    connect(loader, SIGNAL(downloadComplete(QString)), request, SIGNAL(downloadComplete(QString)));
+    connect(loader, SIGNAL(uploadProgress(int)), request, SIGNAL(uploadProgress(int)));
+    connect(loader, SIGNAL(downloadProgress(int)), request, SIGNAL(downloadProgress(int)));
+    connect(loader, SIGNAL(error(QString)), request, SIGNAL(error(QString)));
+    connect(loader, SIGNAL(finished()), request, SIGNAL(finished()));
 
     //
     // Загружаем!
     //
-    wl->loadAsync(r->m_request->urlToLoad(), r->m_request->urlReferer());
+    loader->loadAsync(request->m_request->urlToLoad(), request->m_request->urlReferer());
 }
 
-void NetworkQueue::stop(NetworkRequestInternal *internal) {
-    mtx.lock();
-    if (inQueue.contains(internal)) {
+void NetworkQueue::stop(NetworkRequestInternal* _internal) {
+    m_mtx.lock();
+    if (m_inQueue.contains(_internal)) {
         //
         // Либо запрос еще в очереди
         // Тогда его нужно оттуда удалить
         //
-        queue.removeAll(internal);
-        inQueue.remove(internal);
+        m_queue.removeAll(_internal);
+        m_inQueue.remove(_internal);
     }
     else {
         //
         // Либо запрос уже обрабатывается
         //
-        for (auto iter = usedWL.begin(); iter != usedWL.end(); ++iter) {
+        for (auto iter = m_busyLoaders.begin(); iter != m_busyLoaders.end(); ++iter) {
             //
             // Найдем запрос в списке обрабатывающихся
             //
-            if (iter.value() == internal) {
+            if (iter.value() == _internal) {
 
                 //
                 // Отключим все сигналы
@@ -111,52 +111,52 @@ void NetworkQueue::stop(NetworkRequestInternal *internal) {
                 // Удалим из списка используемых
                 // К списку свободных WebLoader'ов припишет слот downloadComplete
                 //
-                usedWL.erase(iter);
+                m_busyLoaders.erase(iter);
 
                 break;
             }
         }
     }
-    mtx.unlock();
+    m_mtx.unlock();
 }
 
-void NetworkQueue::setWLParams(WebLoader *wl, NetworkRequestInternal *r) {
-    wl->setCookieJar(r->cookieJar);
-    wl->setRequestMethod(r->method);
-    wl->setLoadingTimeout(r->loadingTimeout);
-    wl->setWebRequest(r->m_request);
+void NetworkQueue::setLoaderParams(WebLoader* _loader, NetworkRequestInternal* request) {
+    _loader->setCookieJar(request->m_cookieJar);
+    _loader->setRequestMethod(request->m_method);
+    _loader->setLoadingTimeout(request->m_loadingTimeout);
+    _loader->setWebRequest(request->m_request);
 }
 
-void NetworkQueue::downloadComplete(WebLoader *wl) {
-    mtx.lock();
-    if (usedWL.contains(wl)) {
+void NetworkQueue::downloadComplete(WebLoader* _loader) {
+    m_mtx.lock();
+    if (m_busyLoaders.contains(_loader)) {
         //
         // Если запрос отработал до конца (не был прерван методом stop),
         // то необходимо отключить сигналы
         // и удалить из списка используемых
         //
-        NetworkRequestInternal *r = usedWL[wl];
+        NetworkRequestInternal* request = m_busyLoaders[_loader];
 
-        disconnect(wl, SIGNAL(downloadComplete(QByteArray)), r, SLOT(downloadComplete(QByteArray)));
-        disconnect(wl, SIGNAL(downloadComplete(QString)), r, SLOT(downloadComplete(QString)));
-        disconnect(wl, SIGNAL(uploadProgress(int)), r, SLOT(uploadProgress(int)));
-        disconnect(wl, SIGNAL(downloadProgress(int)), r, SLOT(downloadProgress(int)));
-        disconnect(wl, SIGNAL(error(QString)), r, SLOT(error(QString)));
-        disconnect(wl, SIGNAL(finished()), r, SLOT(finished()));
+        disconnect(_loader, SIGNAL(downloadComplete(QByteArray)), request, SLOT(downloadComplete(QByteArray)));
+        disconnect(_loader, SIGNAL(downloadComplete(QString)), request, SLOT(downloadComplete(QString)));
+        disconnect(_loader, SIGNAL(uploadProgress(int)), request, SLOT(uploadProgress(int)));
+        disconnect(_loader, SIGNAL(downloadProgress(int)), request, SLOT(downloadProgress(int)));
+        disconnect(_loader, SIGNAL(error(QString)), request, SLOT(error(QString)));
+        disconnect(_loader, SIGNAL(finished()), request, SLOT(finished()));
 
-        usedWL.remove(wl);
+        m_busyLoaders.remove(_loader);
     }
 
     //
     // Добавляем WebLoader в список свободных
     //
-    freeWL.push_back(wl);
+    m_freeLoaders.push_back(_loader);
 
     //
     //Смотрим, надо ли что еще выполнить из очереди
     //
-    if (!queue.empty()) {
+    if (!m_queue.empty()) {
         pop();
     }
-    mtx.unlock();
+    m_mtx.unlock();
 }

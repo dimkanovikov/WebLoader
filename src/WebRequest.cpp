@@ -34,10 +34,10 @@ QUrl WebRequest::urlToLoad() const
 	return m_urlToLoad;
 }
 
-void WebRequest::setUrlToLoad(QUrl url)
+void WebRequest::setUrlToLoad(QUrl _url)
 {
-    if (urlToLoad() != url)
-		m_urlToLoad = url;
+    if (urlToLoad() != _url)
+        m_urlToLoad = _url;
 }
 
 QUrl WebRequest::urlReferer() const
@@ -45,10 +45,10 @@ QUrl WebRequest::urlReferer() const
 	return m_urlReferer;
 }
 
-void WebRequest::setUrlReferer(QUrl url)
+void WebRequest::setUrlReferer(QUrl _url)
 {
-    if (urlReferer() != url)
-		m_urlReferer = url;
+    if (urlReferer() != _url)
+        m_urlReferer = _url;
 }
 
 void WebRequest::clearAttributes()
@@ -57,23 +57,23 @@ void WebRequest::clearAttributes()
 	m_attributeFiles.clear();
 }
 
-void WebRequest::addAttribute(QString name, QVariant value)
+void WebRequest::addAttribute(QString _name, QVariant _value)
 {
 	QPair< QString, QVariant > attribute;
-	attribute.first = name;
-	attribute.second = value;
+    attribute.first = _name;
+    attribute.second = _value;
     addAttribute(attribute);
 }
 
-void WebRequest::addAttributeFile(QString name, QString filePath)
+void WebRequest::addAttributeFile(QString _name, QString _filePath)
 {
 	QPair< QString, QString > attributeFile;
-	attributeFile.first = name;
-	attributeFile.second = filePath;
+    attributeFile.first = _name;
+    attributeFile.second = _filePath;
     addAttributeFile(attributeFile);
 }
 
-QNetworkRequest WebRequest::networkRequest(bool addContentHeaders)
+QNetworkRequest WebRequest::networkRequest(bool _addContentHeaders)
 {
     QNetworkRequest request(urlToLoad());
 	// Установка заголовков запроса
@@ -85,7 +85,7 @@ QNetworkRequest WebRequest::networkRequest(bool addContentHeaders)
 	// ContentType по-умолчанию
     request.setHeader(QNetworkRequest::ContentTypeHeader, CONTENT_TYPE_DEFAULT);
 
-    if (addContentHeaders) {
+    if (_addContentHeaders) {
 		// ContentType
         request.setHeader(QNetworkRequest::ContentTypeHeader, CONTENT_TYPE);
 		// ContentLength
@@ -137,10 +137,10 @@ QList<QPair<QString, QVariant> > WebRequest::attributes() const
 	return m_attributes;
 }
 
-void WebRequest::addAttribute(QPair<QString, QVariant> attribute)
+void WebRequest::addAttribute(QPair<QString, QVariant> _attribute)
 {
-    if (!attributes().contains(attribute))
-        m_attributes.append(attribute);
+    if (!attributes().contains(_attribute))
+        m_attributes.append(_attribute);
 }
 
 QList<QPair<QString, QString> > WebRequest::attributeFiles() const
@@ -148,8 +148,8 @@ QList<QPair<QString, QString> > WebRequest::attributeFiles() const
 	return m_attributeFiles;
 }
 
-void WebRequest::addAttributeFile(QPair<QString, QString> attributeFile)
+void WebRequest::addAttributeFile(QPair<QString, QString> _attributeFile)
 {
-    if (!attributeFiles().contains(attributeFile))
-        m_attributeFiles.append(attributeFile);
+    if (!attributeFiles().contains(_attributeFile))
+        m_attributeFiles.append(_attributeFile);
 }

@@ -14,15 +14,15 @@ class NetworkRequestInternal : public QObject
 {
     Q_OBJECT
 public:
-    explicit NetworkRequestInternal(QObject *parent = 0, QNetworkCookieJar *jar = 0);
+    explicit NetworkRequestInternal(QObject* _parent = 0, QNetworkCookieJar* _jar = 0);
     ~NetworkRequestInternal();
 
-    QUrl urlToLoad;
-    QUrl referer;
-    QNetworkCookieJar *cookieJar;
-    WebLoader::RequestMethod method;
-    int loadingTimeout;
-    WebRequest *m_request;
+    QUrl m_urlToLoad;
+    QUrl m_referer;
+    QNetworkCookieJar* m_cookieJar;
+    WebLoader::RequestMethod m_method;
+    int m_loadingTimeout;
+    WebRequest* m_request;
 
 signals:
     /*!

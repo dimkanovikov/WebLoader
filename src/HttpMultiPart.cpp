@@ -5,8 +5,8 @@
 #include <QtCore/QFile>
 
 
-HttpPart::HttpPart(HttpPartType type) :
-	m_type( type )
+HttpPart::HttpPart(HttpPartType _type) :
+    m_type( _type )
 {
 
 }
@@ -16,16 +16,16 @@ HttpPart::HttpPartType HttpPart::type() const
 	return m_type;
 }
 
-void HttpPart::setText(const QString name, const QString value)
+void HttpPart::setText(const QString _name, const QString _value)
 {
-    setName(name);
-    setValue(value);
+    setName(_name);
+    setValue(_value);
 }
 
-void HttpPart::setFile(const QString name, const QString filePath)
+void HttpPart::setFile(const QString _name, const QString _filePath)
 {
-    setName(name);
-    setFilePath(filePath);
+    setName(_name);
+    setFilePath(_filePath);
 }
 
 QString HttpPart::name() const
@@ -50,28 +50,28 @@ QString HttpPart::filePath() const
 
 
 
-void HttpPart::setName(const QString name)
+void HttpPart::setName(const QString _name)
 {
-    if (m_name != name)
-		m_name = name;
+    if (m_name != _name)
+        m_name = _name;
 }
 
-void HttpPart::setValue(const QString value)
+void HttpPart::setValue(const QString _value)
 {
-    if (m_value != value)
-		m_value = value;
+    if (m_value != _value)
+        m_value = _value;
 }
 
-void HttpPart::setFileName(const QString fileName)
+void HttpPart::setFileName(const QString _fileName)
 {
-    setValue(fileName);
+    setValue(_fileName);
 }
 
-void HttpPart::setFilePath(const QString filePath)
+void HttpPart::setFilePath(const QString _filePath)
 {
-    if (m_filePath != filePath) {
-		m_filePath = filePath;
-		QString fileName = filePath.split('/').last();
+    if (m_filePath != _filePath) {
+        m_filePath = _filePath;
+        QString fileName = _filePath.split('/').last();
         setFileName(fileName);
 	}
 }
@@ -84,15 +84,16 @@ HttpMultiPart::HttpMultiPart()
 {
 }
 
-void HttpMultiPart::setBoundary( const QString boundary )
+void HttpMultiPart::setBoundary(const QString _boundary)
 {
-	if ( m_boundary != boundary )
-		m_boundary = boundary;
+    if (m_boundary != _boundary) {
+        m_boundary = _boundary;
+    }
 }
 
-void HttpMultiPart::addPart( HttpPart part )
+void HttpMultiPart::addPart(HttpPart _part)
 {
-	m_parts.append( part );
+    m_parts.append(_part);
 }
 
 QByteArray HttpMultiPart::data()
@@ -110,74 +111,74 @@ QByteArray HttpMultiPart::data()
 	return multiPartData;
 }
 
-QByteArray HttpMultiPart::makeDataFromPart( HttpPart part )
+QByteArray HttpMultiPart::makeDataFromPart(HttpPart _part)
 {
 	QByteArray partData;
-	switch ( part.type() ) {
+    switch (_part.type()) {
 	case HttpPart::Text: {
-		partData = makeDataFromTextPart( part );
+        partData = makeDataFromTextPart( _part );
 		break;
 	}
 	case HttpPart::File: {
-		partData = makeDataFromFilePart( part );
+        partData = makeDataFromFilePart( _part );
 		break;
 	}
 	}
 	return partData;
 }
 
-QByteArray HttpMultiPart::makeDataFromTextPart( HttpPart part )
+QByteArray HttpMultiPart::makeDataFromTextPart(HttpPart _part)
 {
 	QByteArray partData;
 
-	partData.append( "--" );
-	partData.append( boundary() );
-	partData.append( crlf() );
+    partData.append("--");
+    partData.append(boundary());
+    partData.append(crlf());
 
 	partData.append(
-				QString( "Content-Disposition: form-data; name=\"%1\"%3%3%2" )
-				.arg( part.name(), part.value(), crlf() )
+                QString("Content-Disposition: form-data; name=\"%1\"%3%3%2")
+                .arg(_part.name(), _part.value(), crlf())
 				);
 
-	partData.append( crlf() );
+    partData.append(crlf());
 
 	return partData;
 }
 
-QByteArray HttpMultiPart::makeDataFromFilePart(HttpPart part)
+QByteArray HttpMultiPart::makeDataFromFilePart(HttpPart _part)
 {
 	QByteArray partData;
 
-	partData.append( "--" );
-	partData.append( boundary() );
-	partData.append( crlf() );
+    partData.append("--");
+    partData.append(boundary());
+    partData.append(crlf());
 
 	{
-		QFile uploadFile( part.filePath() );
-		uploadFile.open( QIODevice::ReadOnly );
+        QFile uploadFile(_part.filePath());
+        uploadFile.open(QIODevice::ReadOnly);
 		// Определение mime типа файла
 		QFreeDesktopMime mimeTypeDetector;
-		QString contentType = mimeTypeDetector.fromFile( &uploadFile );
-		uploadFile.seek( 0 ); // Несколько байт были считаны
+        QString contentType = mimeTypeDetector.fromFile(&uploadFile);
+        uploadFile.seek(0); // Несколько байт были считаны
 
 		partData.append(
-					QString( "Content-Disposition: form-data; name=\"%1\"; filename=\"%2\"%4"
+                    QString("Content-Disposition: form-data; name=\"%1\"; filename=\"%2\"%4"
 							 "Content-Type: %3%4%4"
 							 )
-					.arg( part.name(),
-						  part.fileName(),
+                    .arg(_part.name(),
+                          _part.fileName(),
 						  contentType,
-						  crlf() )
+                          crlf())
 					);
 
-		while ( !uploadFile.atEnd() ) {
+        while (!uploadFile.atEnd()) {
 			QByteArray readed = uploadFile.read(1024);
-			partData.append( readed );
+            partData.append(readed);
 		}
 		uploadFile.close();
 	}
 
-	partData.append( crlf() );
+    partData.append(crlf());
 	return partData;
 }
 
@@ -185,10 +186,10 @@ QByteArray HttpMultiPart::makeEndData()
 {
 	QByteArray partData;
 
-	partData.append( "--" );
+    partData.append("--");
 	partData.append(boundary());
-	partData.append( "--" );
-	partData.append( crlf() );
+    partData.append("--");
+    partData.append(crlf());
 
 	return partData;
 }

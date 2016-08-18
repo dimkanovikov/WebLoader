@@ -19,7 +19,7 @@ public:
     /*!
      * \brief Конструктор
      */
-    explicit NetworkRequest(QObject * _parent = 0, QNetworkCookieJar * _jar = 0);
+    explicit NetworkRequest(QObject* _parent = 0, QNetworkCookieJar* _jar = 0);
     /*!
      * \brief Деструктор
      */
@@ -28,7 +28,7 @@ public:
     /*!
      * \brief Установка cookie для загрузчика
      */
-    void setCookieJar(QNetworkCookieJar *cookieJar);
+    void setCookieJar(QNetworkCookieJar* _cookieJar);
     /*!
      * \brief Получение cookie загрузчика
      */
@@ -36,7 +36,7 @@ public:
     /*!
      * \brief Установка метода запроса
      */
-    void setRequestMethod(WebLoader::RequestMethod method);
+    void setRequestMethod(WebLoader::RequestMethod _method);
     /*!
      * \brief Получение метода запроса
      */
@@ -44,7 +44,7 @@ public:
     /*!
      * \brief Установка таймаута загрузки
      */
-    void setLoadingTimeout(int loadingTimeout);
+    void setLoadingTimeout(int _loadingTimeout);
     /*!
      * \brief Получение таймаута загрузки
      */
@@ -56,27 +56,27 @@ public:
     /*!
      * \brief Добавление атрибута в запрос
      */
-    void addRequestAttribute(QString name, QVariant value);
+    void addRequestAttribute(QString _name, QVariant _value);
     /*!
      * \brief Добавление файла в запрос
      */
-    void addRequestAttributeFile(QString name, QString filePath);
+    void addRequestAttributeFile(QString _name, QString _filePath);
     /*!
      * \brief Асинхронная загрузка запроса
      */
-    void loadAsync(QString urlToLoad, QUrl referer = QUrl());
+    void loadAsync(QString _urlToLoad, QUrl _referer = QUrl());
     /*!
      * \brief Асинхронная загрузка запроса
      */
-    void loadAsync(QUrl urlToLoad, QUrl referer = QUrl());
+    void loadAsync(QUrl _urlToLoad, QUrl _referer = QUrl());
     /*!
      * \brief Синхронная загрузка запроса
      */
-    QByteArray loadSync(QString urlToLoad, QUrl referer = QUrl());
+    QByteArray loadSync(QString _urlToLoad, QUrl _referer = QUrl());
     /*!
      * \brief Синхронная загрузка запроса
      */
-    QByteArray loadSync(QUrl urlToLoad, QUrl referer = QUrl());
+    QByteArray loadSync(QUrl _urlToLoad, QUrl _referer = QUrl());
     /*!
      * \brief Получение загруженного URL
      */
@@ -112,7 +112,7 @@ private:
     /*!
      * \brief Объект, используемый в очереди запросов
      */
-    NetworkRequestInternal internal;
+    NetworkRequestInternal m_internal;
     /*!
      * \brief Загруженные данные в случае, если используется синхронная загрузка
      */

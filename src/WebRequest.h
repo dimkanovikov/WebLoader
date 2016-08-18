@@ -28,7 +28,7 @@ public:
 	  \fn Установка ссылки для запроса
 	  \param url - ссылка
 	  */
-    void setUrlToLoad(QUrl url);
+    void setUrlToLoad(QUrl _url);
 
 	/*!
 	  \fn Ссылка referer
@@ -38,7 +38,7 @@ public:
 	  \fn Установка ссылки referer'а
 	  \param url - ссылка
 	  */
-    void setUrlReferer(QUrl url);
+    void setUrlReferer(QUrl _url);
 	/*!
 	 * \fn Очистить список атрибутов
 	 */
@@ -48,18 +48,18 @@ public:
 	  \param name - название атрибута
 	  \param value - значение атрибута
 	  */
-    void addAttribute(QString name, QVariant value);
+    void addAttribute(QString _name, QVariant _value);
 	/*!
 	  \fn Добавление атрибута-файла в запрос
 	  \param name - название атрибута
 	  \param filePath - путь к файлу
 	  */
-    void addAttributeFile(QString name, QString filePath);
+    void addAttributeFile(QString _name, QString _filePath);
 
 	/*!
 	  \fn Сформированный объект класса QNetworkRequest
 	  */
-    QNetworkRequest networkRequest(bool addContentHeaders = false);
+    QNetworkRequest networkRequest(bool _addContentHeaders = false);
 
 	/*!
 	  \fn Атрибуты запроса
@@ -79,7 +79,7 @@ private:
 	  \fn Добавление текстового атрибута в запрос
 	  \param attribute - имя + значения атрибута
 	  */
-    void addAttribute(QPair< QString, QVariant > attribute);
+    void addAttribute(QPair< QString, QVariant > _attribute);
 	/*!
 	  \fn Атрибуты-файлы запроса
 	  */
@@ -88,7 +88,7 @@ private:
 	  \fn Добавление атрибута-файла в запрос
 	  \param attributeFile - имя атрибута + путь к файлу
 	  */
-    void addAttributeFile(QPair<QString, QString> attributeFile);
+    void addAttributeFile(QPair<QString, QString> _attributeFile);
 
 private:
 	QUrl m_urlToLoad,

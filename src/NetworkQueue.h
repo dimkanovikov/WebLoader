@@ -54,7 +54,7 @@ private slots:
      * \brief Слот, выполняющийся после завершения выполнения запроса
      * Начинает выполнение следующего запроса в очереди
      */
-    void downloadComplete(WebLoader *wl);
+    void downloadComplete(WebLoader* _loader);
 
 private:
     /*!
@@ -72,26 +72,26 @@ private:
     /*!
      * \brief Настройка параметров для WebLoader'а
      */
-    void setWLParams(WebLoader *wl, NetworkRequestInternal *r);
+    void setLoaderParams(WebLoader* _loader, NetworkRequestInternal* _request);
 
     /*!
      * \brief Очередь запросов
      */
-    QList<NetworkRequestInternal*> queue;
+    QList<NetworkRequestInternal*> m_queue;
     /*!
      * \brief Множество, содержащее запросы в очереди
      * Необходим для быстрого определения, находится ли запрос в очереди
      */
-    QSet<NetworkRequestInternal*> inQueue;
+    QSet<NetworkRequestInternal*> m_inQueue;
     /*!
      * \brief WebLoader'ы, выполняющие запрос и соответствующие им запросы
      */
-    QMap<WebLoader*, NetworkRequestInternal*> usedWL;
+    QMap<WebLoader*, NetworkRequestInternal*> m_busyLoaders;
     /*!
      * \brief Список свободных WebLoader'ов
      */
-    QList<WebLoader*> freeWL;
-    QMutex mtx;
+    QList<WebLoader*> m_freeLoaders;
+    QMutex m_mtx;
 };
 
 #endif // NETWORKQUEUE_H

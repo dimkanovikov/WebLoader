@@ -34,7 +34,7 @@ public:
 	/*!
 	  \fn Конструктор
 	  */
-    explicit WebLoader(QObject * _parent = 0, QNetworkCookieJar * _jar = 0);
+    explicit WebLoader(QObject* _parent = 0, QNetworkCookieJar* _jar = 0);
 	/*!
 	  \fn Деструктор
 	  */
@@ -44,12 +44,12 @@ public:
 	  \fn Установка куков для сессии загрузчика
 	  \param cookie - коллекция куков
 	  */
-	void setCookieJar( QNetworkCookieJar * cookieJar );
+    void setCookieJar(QNetworkCookieJar* _cookieJar);
 	/*!
 	  \fn Установка метода запроса
 	  \param method - метод запроса
 	  */
-	void setRequestMethod( RequestMethod method );
+    void setRequestMethod(RequestMethod _method);
 
     /**
      * @brief Установить таймаут загрузки
@@ -65,24 +65,22 @@ public:
 	  \param name   - имя атрибута
 	  \param value  - значение атрибута
 	  */
-	void addRequestAttribute( QString name,
-							  QVariant value);
+    void addRequestAttribute(QString _name, QVariant _value);
 	/*!
 	  \fn Добавление файла в запрос
 	  \param name     - имя атрибута
 	  \param filePath - путь к файлу
 	  */
-	void addRequestAttributeFile( QString name,
-								  QString filePath );
-    void setWebRequest(WebRequest *request);
+    void addRequestAttributeFile(QString _name, QString _filePath);
+    void setWebRequest(WebRequest* _request);
 	/*!
 	  \fn Отправка запроса (асинхронное выполнение)
 	  \param urlToLoad - ссылка для запроса
 	  \param referer   - реферальная ссылка
 	  */
 	/** @{ */
-	void loadAsync( QString urlToLoad, QUrl referer = QUrl() );
-	void loadAsync( QUrl urlToLoad, QUrl referer = QUrl() );
+    void loadAsync(QString _urlToLoad, QUrl _referer = QUrl());
+    void loadAsync(QUrl _urlToLoad, QUrl _referer = QUrl());
 	/** @} */
 
 	/*!
@@ -91,8 +89,8 @@ public:
 	  \param referer   - реферальная ссылка
 	  */
 	/** @{ */
-	QByteArray loadSync( QString urlToLoad, QUrl referer = QUrl() );
-	QByteArray loadSync( QUrl urlToLoad, QUrl referer = QUrl() );
+    QByteArray loadSync(QString _urlToLoad, QUrl _referer = QUrl());
+    QByteArray loadSync(QUrl _urlToLoad, QUrl _referer = QUrl());
 	/** @} */
 
 	QUrl url() const;
@@ -110,24 +108,24 @@ signals:
 	  \fn Прогресс отправки запроса на сервер
 	  \param Процент отправленных данных
 	  */
-	void uploadProgress( int );
+    void uploadProgress(int);
 	/*!
 	  \fn Прогресс загрузки данных с сервера
 	  \param Процент загруженных данных
 	  */
-	void downloadProgress( int );
+    void downloadProgress(int);
 	/*!
 	  \fn Данные загружены
 	  \param Загруженные данные
 	  */
-    void downloadComplete( WebLoader* );
-	void downloadComplete( QByteArray );
-	void downloadComplete( QString );
+    void downloadComplete(WebLoader*);
+    void downloadComplete(QByteArray);
+    void downloadComplete(QString);
 	/*!
 	  \fn Сигнал об ошибке
 	  \param Текст ошибки
 	  */
-    void error( QString );
+    void error(QString);
 
 
 //*****************************************************************************
@@ -146,23 +144,23 @@ private slots:
 	  \param uploadedBytes - отправлено байт
 	  \param totalBytes - байт к отправке
 	  */
-	void uploadProgress( qint64 uploadedBytes, qint64 totalBytes );
+    void uploadProgress(qint64 _uploadedBytes, qint64 _totalBytes);
 	/*!
 	  \fn Прогресс загрузки данных с сервера
 	  \param recievedBytes загружено байт
 	  \param totalBytes - байт к отправке
 	  */
-	void downloadProgress( qint64 recievedBytes, qint64 totalBytes );
+    void downloadProgress(qint64 _recievedBytes, qint64 _totalBytes);
 	/*!
 	  \fn Окончание загрузки страницы
 	  \param reply - ответ сервера
 	  */
-	void downloadComplete( QNetworkReply * reply );
+    void downloadComplete(QNetworkReply* _reply);
 	/*!
 	  \fn Ошибка при загрузки страницы
 	  \param networkError - ошибка
 	  */
-	void downloadError( QNetworkReply::NetworkError networkError );
+    void downloadError(QNetworkReply::NetworkError _networkError);
 	/*!
 	 * \fn Ошибки при защищённом подключении
 	 * \param Список ошибок
@@ -178,9 +176,9 @@ private:
 
 // Данные класса
 private:
-	QNetworkAccessManager * m_networkManager;
-	QNetworkCookieJar * m_cookieJar;
-    WebRequest *m_request;
+    QNetworkAccessManager* m_networkManager;
+    QNetworkCookieJar* m_cookieJar;
+    WebRequest* m_request;
 	RequestMethod m_requestMethod;
 	bool m_isNeedRedirect;
 
