@@ -1,4 +1,4 @@
-#include "HttpMultiPart.h"
+#include "HttpMultiPart_p.h"
 #include "QFreeDesktopMime/freedesktopmime.h"
 
 #include <QtCore/QStringList>

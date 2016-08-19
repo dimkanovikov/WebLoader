@@ -1,4 +1,4 @@
-#include "NetworkQueue.h"
+#include "NetworkQueue_p.h"
 
 NetworkQueue::NetworkQueue()
 {

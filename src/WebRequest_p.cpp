@@ -1,5 +1,5 @@
-#include "WebRequest.h"
-#include "HttpMultiPart.h"
+#include "WebRequest_p.h"
+#include "HttpMultiPart_p.h"
 
 
 #include <QFile>

@@ -4,8 +4,8 @@
 #include <QVector>
 #include <QMutex>
 
-#include "WebLoader.h"
-#include "NetworkRequestInternal.h"
+#include "WebLoader_p.h"
+#include "NetworkRequestInternal_p.h"
 
 /*!
  * \brief Класс, реализующий очередь запросов

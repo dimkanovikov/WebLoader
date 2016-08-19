@@ -1,4 +1,4 @@
-#include "WebLoader.h"
+#include "WebLoader_p.h"
 
 #include <QtNetwork/QNetworkCookieJar>
 #include <QtNetwork/QNetworkAccessManager>

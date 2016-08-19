@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "WebLoader.h"
+#include "WebLoader_p.h"
 
 /*!
  * \brief Внутренний класс для хранения в очереди запросов

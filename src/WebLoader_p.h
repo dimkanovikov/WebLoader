@@ -1,7 +1,7 @@
 #ifndef WEBLOADER_H
 #define WEBLOADER_H
 
-#include "WebRequest.h"
+#include "WebRequest_p.h"
 
 #include <QtCore/QThread>
 #include <QtCore/QUrl>
