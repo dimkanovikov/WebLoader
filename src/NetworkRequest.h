@@ -69,6 +69,10 @@ public:
      * \brief Асинхронная загрузка запроса
      */
     void loadAsync(QUrl _urlToLoad, QUrl _referer = QUrl());
+    static void loadAsyncS(QString _urlToLoad, QObject* _object,
+                           const char* _slot, QUrl _referer = QUrl());
+    static void loadAsyncS(QUrl _urlToLoad, QObject* _object,
+                           const char* _slot, QUrl _referer = QUrl());
     /*!
      * \brief Синхронная загрузка запроса
      */
@@ -77,6 +81,8 @@ public:
      * \brief Синхронная загрузка запроса
      */
     QByteArray loadSync(QUrl _urlToLoad, QUrl _referer = QUrl());
+    static QByteArray loadSyncS(QUrl _urlToLoad, QUrl _referer = QUrl());
+    static QByteArray loadSyncS(QString _urlToLoad, QUrl _referer = QUrl());
     /*!
      * \brief Получение загруженного URL
      */
@@ -91,20 +97,20 @@ signals:
     /*!
      * \brief Прогресс отправки запроса на сервер
      */
-    void uploadProgress(int);
+    void uploadProgress(int, QUrl);
     /*!
      * \brief Прогресс загрузки данных с сервера
      */
-    void downloadProgress(int);
+    void downloadProgress(int, QUrl);
     /*!
      * \brief Данные загружены
      */
-    void downloadComplete(QByteArray);
-    void downloadComplete(QString);
+    void downloadComplete(QByteArray, QUrl);
+    void downloadComplete(QString, QUrl);
     /*!
      * \brief Сигнал об ошибке
      */
-    void error(QString);
+    void error(QString, QUrl);
     void finished();
 
 private:
@@ -136,7 +142,7 @@ private slots:
     /*!
      * \brief Ошибка при получении данных
      */
-    void slotError(QString);
+    void slotError(QString, QUrl);
 };
 
 #endif // NETWORKREQUEST_H

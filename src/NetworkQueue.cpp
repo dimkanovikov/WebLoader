@@ -58,11 +58,16 @@ void NetworkQueue::pop() {
     //
     // Соединим сигналы WebLoader'а с сигналами класса запроса
     //
-    connect(loader, SIGNAL(downloadComplete(QByteArray)), request, SIGNAL(downloadComplete(QByteArray)));
-    connect(loader, SIGNAL(downloadComplete(QString)), request, SIGNAL(downloadComplete(QString)));
-    connect(loader, SIGNAL(uploadProgress(int)), request, SIGNAL(uploadProgress(int)));
-    connect(loader, SIGNAL(downloadProgress(int)), request, SIGNAL(downloadProgress(int)));
-    connect(loader, SIGNAL(error(QString)), request, SIGNAL(error(QString)));
+    connect(loader, SIGNAL(downloadComplete(QByteArray, QUrl)),
+            request, SIGNAL(downloadComplete(QByteArray, QUrl)));
+    connect(loader, SIGNAL(downloadComplete(QString, QUrl)),
+            request, SIGNAL(downloadComplete(QString, QUrl)));
+    connect(loader, SIGNAL(uploadProgress(int, QUrl)),
+            request, SIGNAL(uploadProgress(int, QUrl)));
+    connect(loader, SIGNAL(downloadProgress(int, QUrl)),
+            request, SIGNAL(downloadProgress(int, QUrl)));
+    connect(loader, SIGNAL(error(QString, QUrl)),
+            request, SIGNAL(error(QString, QUrl)));
     connect(loader, SIGNAL(finished()), request, SIGNAL(finished()));
 
     //
@@ -137,11 +142,16 @@ void NetworkQueue::downloadComplete(WebLoader* _loader) {
         //
         NetworkRequestInternal* request = m_busyLoaders[_loader];
 
-        disconnect(_loader, SIGNAL(downloadComplete(QByteArray)), request, SLOT(downloadComplete(QByteArray)));
-        disconnect(_loader, SIGNAL(downloadComplete(QString)), request, SLOT(downloadComplete(QString)));
-        disconnect(_loader, SIGNAL(uploadProgress(int)), request, SLOT(uploadProgress(int)));
-        disconnect(_loader, SIGNAL(downloadProgress(int)), request, SLOT(downloadProgress(int)));
-        disconnect(_loader, SIGNAL(error(QString)), request, SLOT(error(QString)));
+        disconnect(_loader, SIGNAL(downloadComplete(QByteArray, QUrl)),
+                   request, SLOT(downloadComplete(QByteArray, QUrl)));
+        disconnect(_loader, SIGNAL(downloadComplete(QString, QUrl)),
+                   request, SLOT(downloadComplete(QString, QUrl)));
+        disconnect(_loader, SIGNAL(uploadProgress(int, QUrl)),
+                   request, SLOT(uploadProgress(int, QUrl)));
+        disconnect(_loader, SIGNAL(downloadProgress(int, QUrl)),
+                   request, SLOT(downloadProgress(int, QUrl)));
+        disconnect(_loader, SIGNAL(error(QString, QUrl)),
+                   request, SLOT(error(QString, QUrl)));
         disconnect(_loader, SIGNAL(finished()), request, SLOT(finished()));
 
         m_busyLoaders.remove(_loader);

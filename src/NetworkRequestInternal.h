@@ -10,6 +10,7 @@
  * Используется только классами NetworkRequest и NetworkQueue
  * Для упрощения взаимодействия данные класса являются public
  */
+
 class NetworkRequestInternal : public QObject
 {
     Q_OBJECT
@@ -28,20 +29,20 @@ signals:
     /*!
      * \brief Прогресс отправки запроса на сервер
      */
-    void uploadProgress(int);
+    void uploadProgress(int, QUrl);
     /*!
      * \brief Прогресс загрузки данных с сервера
      */
-    void downloadProgress(int);
+    void downloadProgress(int, QUrl);
     /*!
      * \brief Данные загружены
      */
-    void downloadComplete(QByteArray);
-    void downloadComplete(QString);
+    void downloadComplete(QByteArray, QUrl);
+    void downloadComplete(QString, QUrl);
     /*!
      * \brief Сигнал об ошибке
      */
-    void error(QString);
+    void error(QString, QUrl);
     void finished();
 
 public slots:

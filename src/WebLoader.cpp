@@ -168,11 +168,13 @@ void WebLoader::run()
 {
 	initNetworkManager();
 
+    m_initUrl = m_request->urlToLoad();
+
 	do
 	{
         //! Начало загрузки страницы m_request->url()
-		emit uploadProgress(0);
-		emit downloadProgress(0);
+        emit uploadProgress(0, m_initUrl);
+        emit downloadProgress(0, m_initUrl);
 
 		QPointer<QNetworkReply> reply = 0;
 
@@ -240,11 +242,9 @@ void WebLoader::run()
 
     } while (m_isNeedRedirect);
 
-    qDebug() << m_downloadedData;
-	emit downloadComplete(m_downloadedData);
-	emit downloadComplete(QString(m_downloadedData));
+    emit downloadComplete(m_downloadedData, m_initUrl);
+    emit downloadComplete(QString(m_downloadedData), m_initUrl);
     emit downloadComplete(this);
-    qDebug() << "I've emited";
 }
 
 void WebLoader::stop()
@@ -259,7 +259,7 @@ void WebLoader::uploadProgress(qint64 _uploadedBytes, qint64 _totalBytes)
 {
 	//! отправлено [uploaded] байт из [total]
     if (_totalBytes > 0)
-        emit uploadProgress(((float)_uploadedBytes / _totalBytes) * 100);
+        emit uploadProgress(((float)_uploadedBytes / _totalBytes) * 100, m_initUrl);
 }
 
 void WebLoader::downloadProgress(qint64 _recievedBytes, qint64 _totalBytes)
@@ -270,7 +270,7 @@ void WebLoader::downloadProgress(qint64 _recievedBytes, qint64 _totalBytes)
 	// заранее заданное число (средний размер веб-страницы)
     if (_totalBytes < 0)
         _totalBytes = POSSIBLE_RECIEVED_MAX_FILE_SIZE;
-    emit downloadProgress(((float)_recievedBytes / _totalBytes) * 100);
+    emit downloadProgress(((float)_recievedBytes / _totalBytes) * 100, m_initUrl);
 }
 
 void WebLoader::downloadComplete(QNetworkReply* _reply)
@@ -315,7 +315,7 @@ void WebLoader::downloadError(QNetworkReply::NetworkError _networkError)
 			m_lastError =
 					tr("Sorry, we have some error while loading. Error is: %1")
                     .arg(::networkErrorToString(_networkError));
-			emit error(lastError());
+            emit error(lastError(), m_initUrl);
 			break;
 
 	}

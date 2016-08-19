@@ -5,11 +5,16 @@ NetworkRequest::NetworkRequest(QObject* _parent, QNetworkCookieJar* _jar)
 {
     //
     // Соединим сигналы от internal с сигналами/слотами этого класса
-    connect(&m_internal, SIGNAL(downloadComplete(QByteArray)), this, SIGNAL(downloadComplete(QByteArray)));
-    connect(&m_internal, SIGNAL(downloadComplete(QString)), this, SIGNAL(downloadComplete(QString)));
-    connect(&m_internal, SIGNAL(downloadProgress(int)), this, SIGNAL(downloadProgress(int)));
-    connect(&m_internal, SIGNAL(uploadProgress(int)), this, SIGNAL(uploadProgress(int)));
-    connect(&m_internal, SIGNAL(error(QString)), this, SLOT(slotError(QString)));
+    connect(&m_internal, SIGNAL(downloadComplete(QByteArray, QUrl)),
+            this, SIGNAL(downloadComplete(QByteArray, QUrl)));
+    connect(&m_internal, SIGNAL(downloadComplete(QString, QUrl)),
+            this, SIGNAL(downloadComplete(QString, QUrl)));
+    connect(&m_internal, SIGNAL(downloadProgress(int, QUrl)),
+            this, SIGNAL(downloadProgress(int, QUrl)));
+    connect(&m_internal, SIGNAL(uploadProgress(int, QUrl)),
+            this, SIGNAL(uploadProgress(int, QUrl)));
+    connect(&m_internal, SIGNAL(error(QString, QUrl)),
+            this, SLOT(slotError(QString, QUrl)));
     connect(&m_internal, SIGNAL(finished()), this, SIGNAL(finished()));
 
 }
@@ -94,6 +99,32 @@ void NetworkRequest::loadAsync(QUrl _urlToLoad, QUrl _referer)
     nq->put(&m_internal);
 }
 
+void NetworkRequest::loadAsyncS(QString _urlToLoad, QObject *_object,
+                                const char* _slot, QUrl _referer)
+{
+    loadAsyncS(QUrl(_urlToLoad), _object, _slot, _referer);
+}
+
+void NetworkRequest::loadAsyncS(QUrl _urlToLoad, QObject *_object,
+                               const char* _slot, QUrl _referer)
+{
+    NetworkRequest* request = new NetworkRequest;
+    connect(request, SIGNAL(downloadComplete(QByteArray, QUrl)), _object, _slot);
+    connect(request, SIGNAL(downloadComplete(QByteArray, QUrl)), request, SLOT(deleteLater()));
+    request->loadAsync(_urlToLoad, _referer);
+}
+
+QByteArray NetworkRequest::loadSyncS(QString _urlToLoad, QUrl _referer)
+{
+    return loadSyncS(QUrl(_urlToLoad), _referer);
+}
+
+QByteArray NetworkRequest::loadSyncS(QUrl _urlToLoad, QUrl _referer)
+{
+    NetworkRequest request;
+    return request.loadSync(_urlToLoad, _referer);
+}
+
 QByteArray NetworkRequest::loadSync(QString _urlToLoad, QUrl _referer)
 {
     return loadSync(QUrl(_urlToLoad), _referer);
@@ -106,7 +137,8 @@ QByteArray NetworkRequest::loadSync(QUrl _urlToLoad, QUrl _referer)
     //
     QEventLoop loop;
     connect(this, SIGNAL(finished()), &loop, SLOT(quit()));
-    connect(&m_internal, SIGNAL(downloadComplete(QByteArray)), this, SLOT(downloadCompleteData(QByteArray)));
+    connect(&m_internal, SIGNAL(downloadComplete(QByteArray, QUrl)),
+            this, SLOT(downloadCompleteData(QByteArray)));
     loadAsync(_urlToLoad, _referer);
     loop.exec();
 
@@ -123,10 +155,10 @@ void NetworkRequest::downloadCompleteData(QByteArray _data)
     m_downloadedData = _data;
 }
 
-void NetworkRequest::slotError(QString _errorStr)
+void NetworkRequest::slotError(QString _errorStr, QUrl _url)
 {
     m_lastError = _errorStr;
-    emit error(_errorStr);
+    emit error(_errorStr, _url);
 }
 
 QString NetworkRequest::lastError() const

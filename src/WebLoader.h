@@ -108,24 +108,24 @@ signals:
 	  \fn Прогресс отправки запроса на сервер
 	  \param Процент отправленных данных
 	  */
-    void uploadProgress(int);
+    void uploadProgress(int, QUrl);
 	/*!
 	  \fn Прогресс загрузки данных с сервера
 	  \param Процент загруженных данных
 	  */
-    void downloadProgress(int);
+    void downloadProgress(int, QUrl);
 	/*!
 	  \fn Данные загружены
 	  \param Загруженные данные
 	  */
     void downloadComplete(WebLoader*);
-    void downloadComplete(QByteArray);
-    void downloadComplete(QString);
+    void downloadComplete(QByteArray, QUrl);
+    void downloadComplete(QString, QUrl);
 	/*!
 	  \fn Сигнал об ошибке
 	  \param Текст ошибки
 	  */
-    void error(QString);
+    void error(QString, QUrl);
 
 
 //*****************************************************************************
@@ -181,6 +181,7 @@ private:
     WebRequest* m_request;
 	RequestMethod m_requestMethod;
 	bool m_isNeedRedirect;
+    QUrl m_initUrl;
 
     /**
      * @brief Таймаут загрузки ссылки
