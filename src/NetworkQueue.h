@@ -73,7 +73,11 @@ private:
      * \brief Настройка параметров для WebLoader'а
      */
     void setLoaderParams(WebLoader* _loader, NetworkRequestInternal* _request);
-
+    /*!
+     * \brief Отключение сигналов WebLoader'а
+     * от сигналов NetworkRequestInternal
+     */
+    void disconnectLoaderRequest(WebLoader* _loader, NetworkRequestInternal* _request);
     /*!
      * \brief Очередь запросов
      */

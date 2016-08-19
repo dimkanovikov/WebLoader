@@ -9,13 +9,14 @@ NetworkRequest::NetworkRequest(QObject* _parent, QNetworkCookieJar* _jar)
             this, SIGNAL(downloadComplete(QByteArray, QUrl)));
     connect(&m_internal, SIGNAL(downloadComplete(QString, QUrl)),
             this, SIGNAL(downloadComplete(QString, QUrl)));
-    connect(&m_internal, SIGNAL(downloadProgress(int, QUrl)),
-            this, SIGNAL(downloadProgress(int, QUrl)));
-    connect(&m_internal, SIGNAL(uploadProgress(int, QUrl)),
-            this, SIGNAL(uploadProgress(int, QUrl)));
-    connect(&m_internal, SIGNAL(error(QString, QUrl)),
-            this, SLOT(slotError(QString, QUrl)));
-    connect(&m_internal, SIGNAL(finished()), this, SIGNAL(finished()));
+    connect(&m_internal, &NetworkRequestInternal::downloadProgress,
+            this, &NetworkRequest::downloadProgress);
+    connect(&m_internal, &NetworkRequestInternal::uploadProgress,
+            this, &NetworkRequest::uploadProgress);
+    connect(&m_internal, &NetworkRequestInternal::error,
+            this, &NetworkRequest::slotError);
+    connect(&m_internal, &NetworkRequestInternal::finished,
+            this, &NetworkRequest::finished);
 
 }
 
@@ -136,7 +137,8 @@ QByteArray NetworkRequest::loadSync(QUrl _urlToLoad, QUrl _referer)
     // Для синхронного запроса используем QEventLoop и асинхронный запрос
     //
     QEventLoop loop;
-    connect(this, SIGNAL(finished()), &loop, SLOT(quit()));
+    connect(this, &NetworkRequest::finished,
+            &loop, &QEventLoop::quit);
     connect(&m_internal, SIGNAL(downloadComplete(QByteArray, QUrl)),
             this, SLOT(downloadCompleteData(QByteArray)));
     loadAsync(_urlToLoad, _referer);

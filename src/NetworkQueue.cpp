@@ -66,9 +66,10 @@ void NetworkQueue::pop() {
             request, SIGNAL(uploadProgress(int, QUrl)));
     connect(loader, SIGNAL(downloadProgress(int, QUrl)),
             request, SIGNAL(downloadProgress(int, QUrl)));
-    connect(loader, SIGNAL(error(QString, QUrl)),
-            request, SIGNAL(error(QString, QUrl)));
-    connect(loader, SIGNAL(finished()), request, SIGNAL(finished()));
+    connect(loader, &WebLoader::error,
+            request, &NetworkRequestInternal::error);
+    connect(loader, &WebLoader::finished,
+            request, &NetworkRequestInternal::finished);
 
     //
     // Загружаем!
@@ -100,12 +101,7 @@ void NetworkQueue::stop(NetworkRequestInternal* _internal) {
                 // Отключим все сигналы
                 // Обязательно сначала отключить сигналы, а затем остановить. Не наоборот!
                 //
-                disconnect(iter.key(), SIGNAL(downloadComplete(QByteArray)), iter.value(), SLOT(downloadComplete(QByteArray)));
-                disconnect(iter.key(), SIGNAL(downloadComplete(QString)), iter.value(), SLOT(downloadComplete(QString)));
-                disconnect(iter.key(), SIGNAL(uploadProgress(int)), iter.value(), SLOT(uploadProgress(int)));
-                disconnect(iter.key(), SIGNAL(downloadProgress(int)), iter.value(), SLOT(downloadProgress(int)));
-                disconnect(iter.key(), SIGNAL(error(QString)), iter.value(), SLOT(error(QString)));
-                disconnect(iter.key(), SIGNAL(finished()), iter.value(), SLOT(finished()));
+                disconnectLoaderRequest(iter.key(), iter.value());
 
                 //
                 // Остановим запрос
@@ -125,14 +121,32 @@ void NetworkQueue::stop(NetworkRequestInternal* _internal) {
     m_mtx.unlock();
 }
 
-void NetworkQueue::setLoaderParams(WebLoader* _loader, NetworkRequestInternal* request) {
+void NetworkQueue::setLoaderParams(WebLoader* _loader, NetworkRequestInternal* request)
+{
     _loader->setCookieJar(request->m_cookieJar);
     _loader->setRequestMethod(request->m_method);
     _loader->setLoadingTimeout(request->m_loadingTimeout);
     _loader->setWebRequest(request->m_request);
 }
 
-void NetworkQueue::downloadComplete(WebLoader* _loader) {
+void NetworkQueue::disconnectLoaderRequest(WebLoader* _loader, NetworkRequestInternal* _request)
+{
+    disconnect(_loader, SIGNAL(downloadComplete(QByteArray, QUrl)),
+               _request, SLOT(downloadComplete(QByteArray, QUrl)));
+    disconnect(_loader, SIGNAL(downloadComplete(QString, QUrl)),
+               _request, SLOT(downloadComplete(QString, QUrl)));
+    disconnect(_loader, SIGNAL(uploadProgress(int, QUrl)),
+               _request, SLOT(uploadProgress(int, QUrl)));
+    disconnect(_loader, SIGNAL(downloadProgress(int, QUrl)),
+               _request, SLOT(downloadProgress(int, QUrl)));
+    disconnect(_loader, &WebLoader::error,
+               _request, &NetworkRequestInternal::error);
+    disconnect(_loader, &WebLoader::finished,
+               _request, &NetworkRequestInternal::finished);
+}
+
+void NetworkQueue::downloadComplete(WebLoader* _loader)
+{
     m_mtx.lock();
     if (m_busyLoaders.contains(_loader)) {
         //
@@ -142,17 +156,7 @@ void NetworkQueue::downloadComplete(WebLoader* _loader) {
         //
         NetworkRequestInternal* request = m_busyLoaders[_loader];
 
-        disconnect(_loader, SIGNAL(downloadComplete(QByteArray, QUrl)),
-                   request, SLOT(downloadComplete(QByteArray, QUrl)));
-        disconnect(_loader, SIGNAL(downloadComplete(QString, QUrl)),
-                   request, SLOT(downloadComplete(QString, QUrl)));
-        disconnect(_loader, SIGNAL(uploadProgress(int, QUrl)),
-                   request, SLOT(uploadProgress(int, QUrl)));
-        disconnect(_loader, SIGNAL(downloadProgress(int, QUrl)),
-                   request, SLOT(downloadProgress(int, QUrl)));
-        disconnect(_loader, SIGNAL(error(QString, QUrl)),
-                   request, SLOT(error(QString, QUrl)));
-        disconnect(_loader, SIGNAL(finished()), request, SLOT(finished()));
+        disconnectLoaderRequest(_loader, request);
 
         m_busyLoaders.remove(_loader);
     }

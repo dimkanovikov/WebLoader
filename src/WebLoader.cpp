@@ -147,7 +147,8 @@ QByteArray WebLoader::loadSync(QUrl _urlToLoad, QUrl _referer)
     m_request->setUrlReferer(_referer);
 
 	QEventLoop loop;
-	connect(this, SIGNAL(finished()), &loop, SLOT(quit()));
+    connect(this, &WebLoader::finished,
+            &loop, &QEventLoop::quit);
 	QTimer::singleShot(m_loadingTimeout, &loop, SLOT(quit()));
 	start();
 	loop.exec();
@@ -199,7 +200,7 @@ void WebLoader::run()
 		connect(reply, SIGNAL(uploadProgress(qint64,qint64)),
 				this, SLOT(uploadProgress(qint64,qint64)));
 		connect(reply, SIGNAL(downloadProgress(qint64,qint64)),
-				this, SLOT(downloadProgress(qint64,qint64)));
+                this, SLOT(downloadProgress(qint64,qint64)));
 		connect(reply, SIGNAL(error(QNetworkReply::NetworkError)),
 				this, SLOT(downloadError(QNetworkReply::NetworkError)));
 		connect(reply, SIGNAL(sslErrors(QList<QSslError>)),
@@ -211,8 +212,10 @@ void WebLoader::run()
 		// Таймер для прерывания работы
 		//
 		QTimer timeoutTimer;
-		connect(&timeoutTimer, SIGNAL(timeout()), this, SLOT(quit()));
-		connect(&timeoutTimer, SIGNAL(timeout()), reply, SLOT(abort()));
+        connect(&timeoutTimer, &QTimer::timeout,
+                this, &WebLoader::quit);
+        connect(&timeoutTimer, &QTimer::timeout,
+                reply, &QNetworkReply::abort);
 		timeoutTimer.setSingleShot(true);
         timeoutTimer.start(m_loadingTimeout);
 
