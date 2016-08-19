@@ -43,6 +43,7 @@ signals:
      * \brief Сигнал об ошибке
      */
     void error(QString, QUrl);
+    void errorDetails(QString, QUrl);
     void finished();
 
 public slots:

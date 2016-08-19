@@ -127,6 +127,7 @@ private:
      * \brief Строка, содержащая описание последней ошибки
      */
     QString m_lastError;
+    QString m_lastErrorDetails;
 
     /*!
      * \brief Остановка выполнения запроса, связанного с текущим объектом
@@ -143,6 +144,7 @@ private slots:
      * \brief Ошибка при получении данных
      */
     void slotError(QString, QUrl);
+    void slotErrorDetails(QString);
 };
 
 #endif // NETWORKREQUEST_H

@@ -68,6 +68,8 @@ void NetworkQueue::pop() {
             request, SIGNAL(downloadProgress(int, QUrl)));
     connect(loader, &WebLoader::error,
             request, &NetworkRequestInternal::error);
+    connect(loader, &WebLoader::errorDetails,
+            request, &NetworkRequestInternal::errorDetails);
     connect(loader, &WebLoader::finished,
             request, &NetworkRequestInternal::finished);
 

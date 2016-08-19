@@ -15,6 +15,8 @@ NetworkRequest::NetworkRequest(QObject* _parent, QNetworkCookieJar* _jar)
             this, &NetworkRequest::uploadProgress);
     connect(&m_internal, &NetworkRequestInternal::error,
             this, &NetworkRequest::slotError);
+    connect(&m_internal, &NetworkRequestInternal::errorDetails,
+            this, &NetworkRequest::slotErrorDetails);
     connect(&m_internal, &NetworkRequestInternal::finished,
             this, &NetworkRequest::finished);
 
@@ -163,6 +165,11 @@ void NetworkRequest::slotError(QString _errorStr, QUrl _url)
     emit error(_errorStr, _url);
 }
 
+void NetworkRequest::slotErrorDetails(QString _errorStr)
+{
+    m_lastErrorDetails = _errorStr;
+}
+
 QString NetworkRequest::lastError() const
 {
     return m_lastError;
@@ -174,4 +181,7 @@ void NetworkRequest::stop()
     nq->stop(&m_internal);
 }
 
-//QString NetworkRequest::lastErrorDetails() const;
+QString NetworkRequest::lastErrorDetails() const
+{
+    return m_lastErrorDetails;
+}

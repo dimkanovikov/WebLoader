@@ -335,6 +335,7 @@ void WebLoader::downloadSslErrors(const QList<QSslError>& _errors)
 	}
 
     m_lastErrorDetails = fullError;
+    emit errorDetails(m_lastErrorDetails, m_initUrl);
 }
 
 

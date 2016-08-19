@@ -126,6 +126,7 @@ signals:
 	  \param Текст ошибки
 	  */
     void error(QString, QUrl);
+    void errorDetails(QString, QUrl);
 
 
 //*****************************************************************************
