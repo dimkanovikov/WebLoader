@@ -55,48 +55,14 @@ public:
      * @brief Установить таймаут загрузки
      */
     void setLoadingTimeout(int _msecs);
-
-	/*!
-	 * \fn Очистить все старые атрибуты запроса
-	 */
-	void clearRequestAttributes();
-	/*!
-	  \fn Добавление атрибута в запрос
-	  \param name   - имя атрибута
-	  \param value  - значение атрибута
-	  */
-    void addRequestAttribute(QString _name, QVariant _value);
-	/*!
-	  \fn Добавление файла в запрос
-	  \param name     - имя атрибута
-	  \param filePath - путь к файлу
-	  */
-    void addRequestAttributeFile(QString _name, QString _filePath);
     void setWebRequest(WebRequest* _request);
+
 	/*!
-	  \fn Отправка запроса (асинхронное выполнение)
+      \fn Отправка запроса (асинхронное выполнение)
 	  \param urlToLoad - ссылка для запроса
 	  \param referer   - реферальная ссылка
-	  */
-	/** @{ */
-    void loadAsync(QString _urlToLoad, QUrl _referer = QUrl());
+      */
     void loadAsync(QUrl _urlToLoad, QUrl _referer = QUrl());
-	/** @} */
-
-	/*!
-	  \fn Отправка запроса (синхронное выполнение)
-	  \param urlToLoad - ссылка для запроса
-	  \param referer   - реферальная ссылка
-	  */
-	/** @{ */
-    QByteArray loadSync(QString _urlToLoad, QUrl _referer = QUrl());
-    QByteArray loadSync(QUrl _urlToLoad, QUrl _referer = QUrl());
-	/** @} */
-
-	QUrl url() const;
-	QString lastError() const;
-	QString lastErrorDetails() const;
-
 
     /**
      * @brief Остановить выполнение

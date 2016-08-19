@@ -100,28 +100,8 @@ void WebLoader::setLoadingTimeout(int _msecs)
 	}
 }
 
-void WebLoader::clearRequestAttributes()
-{
-    m_request->clearAttributes();
-}
-
-void WebLoader::addRequestAttribute(QString _name, QVariant _value)
-{
-    m_request->addAttribute(_name, _value);
-}
-
-void WebLoader::addRequestAttributeFile(QString _name, QString _filePath)
-{
-    m_request->addAttributeFile(_name, _filePath);
-}
-
 void WebLoader::setWebRequest(WebRequest* _request) {
     this->m_request = _request;
-}
-
-void WebLoader::loadAsync(QString _urlToLoad, QUrl _referer)
-{
-    loadAsync(QUrl(_urlToLoad), _referer);
 }
 
 void WebLoader::loadAsync(QUrl _urlToLoad, QUrl _referer)
@@ -132,33 +112,6 @@ void WebLoader::loadAsync(QUrl _urlToLoad, QUrl _referer)
     m_request->setUrlReferer  (_referer);
 
 	start();
-}
-
-QByteArray WebLoader::loadSync(QString _urlToLoad, QUrl _referer)
-{
-    return loadSync(QUrl(_urlToLoad), _referer);
-}
-
-QByteArray WebLoader::loadSync(QUrl _urlToLoad, QUrl _referer)
-{
-	stop();
-
-    m_request->setUrlToLoad(_urlToLoad);
-    m_request->setUrlReferer(_referer);
-
-	QEventLoop loop;
-    connect(this, &WebLoader::finished,
-            &loop, &QEventLoop::quit);
-	QTimer::singleShot(m_loadingTimeout, &loop, SLOT(quit()));
-	start();
-	loop.exec();
-
-	return m_downloadedData;
-}
-
-QUrl WebLoader::url() const
-{
-    return m_request->urlToLoad();
 }
 
 
@@ -318,7 +271,7 @@ void WebLoader::downloadError(QNetworkReply::NetworkError _networkError)
 			m_lastError =
 					tr("Sorry, we have some error while loading. Error is: %1")
                     .arg(::networkErrorToString(_networkError));
-            emit error(lastError(), m_initUrl);
+            emit error(m_lastError, m_initUrl);
 			break;
 
 	}
@@ -369,14 +322,4 @@ void WebLoader::initNetworkManager()
 	//
 	connect(m_networkManager, SIGNAL(finished(QNetworkReply*)),
 			this, SLOT(downloadComplete(QNetworkReply*)));
-}
-
-QString WebLoader::lastError() const
-{
-	return m_lastError;
-}
-
-QString WebLoader::lastErrorDetails() const
-{
-	return m_lastErrorDetails;
 }
