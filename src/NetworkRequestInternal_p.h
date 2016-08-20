@@ -24,7 +24,8 @@ public:
     WebLoader::RequestMethod m_method;
     int m_loadingTimeout;
     WebRequest* m_request;
-    QObject* m_networkRequest;
+
+    void done();
 
 signals:
     /*!

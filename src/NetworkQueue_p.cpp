@@ -8,7 +8,7 @@ NetworkQueue::NetworkQueue()
     //
     for (int i = 0; i != qMax(QThread::idealThreadCount(), 4); ++i) {
         m_freeLoaders.push_back(new WebLoader(this));
-        connect(m_freeLoaders.back(), SIGNAL(downloadComplete(WebLoader*)), this, SLOT(downloadComplete(WebLoader*)));
+        connect(m_freeLoaders.back(), SIGNAL(finished()), this, SLOT(downloadComplete()));
     }
 }
 
@@ -70,8 +70,6 @@ void NetworkQueue::pop() {
             request, &NetworkRequestInternal::error);
     connect(loader, &WebLoader::errorDetails,
             request, &NetworkRequestInternal::errorDetails);
-    connect(loader, &WebLoader::finished,
-            request, &NetworkRequestInternal::finished);
 
     //
     // Загружаем!
@@ -110,6 +108,7 @@ void NetworkQueue::stop(NetworkRequestInternal* _internal) {
                 //
                 iter.key()->stop();
 
+                iter.value()->done();
                 //
                 // Удалим из списка используемых
                 // К списку свободных WebLoader'ов припишет слот downloadComplete
@@ -143,40 +142,30 @@ void NetworkQueue::disconnectLoaderRequest(WebLoader* _loader, NetworkRequestInt
                _request, SIGNAL(downloadProgress(int, QUrl)));
     disconnect(_loader, &WebLoader::error,
                _request, &NetworkRequestInternal::error);
-    disconnect(_loader, &WebLoader::finished,
-               _request, &NetworkRequestInternal::finished);
 }
 
-void NetworkQueue::downloadComplete(WebLoader* _loader)
+void NetworkQueue::downloadComplete()
 {
     m_mtx.lock();
-    if (m_busyLoaders.contains(_loader)) {
+    WebLoader* loader = qobject_cast<WebLoader*>(sender());
+    if (m_busyLoaders.contains(loader)) {
         //
         // Если запрос отработал до конца (не был прерван методом stop),
         // то необходимо отключить сигналы
         // и удалить из списка используемых
         //
-        NetworkRequestInternal* request = m_busyLoaders[_loader];
+        NetworkRequestInternal* request = m_busyLoaders[loader];
 
-        disconnectLoaderRequest(_loader, request);
+        disconnectLoaderRequest(loader, request);
+        request->done();
 
-        m_busyLoaders.remove(_loader);
-
-        //
-        // Если поле m_networkRequest не пусто
-        // значит, необходимо удалить NetworkRequest,
-        // который там располагается
-        // (использование статической асинхронной загрузки)
-        //
-        if(request->m_networkRequest != nullptr) {
-            delete request->m_networkRequest;
-        }
+        m_busyLoaders.remove(loader);
     }
 
     //
     // Добавляем WebLoader в список свободных
     //
-    m_freeLoaders.push_back(_loader);
+    m_freeLoaders.push_back(loader);
 
     //
     //Смотрим, надо ли что еще выполнить из очереди

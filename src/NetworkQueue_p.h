@@ -44,6 +44,7 @@ signals:
      */
     void downloadComplete(QByteArray);
     void downloadComplete(QString);
+    void finished();
     /*!
      * \brief Сигнал об ошибке
      */
@@ -54,7 +55,7 @@ private slots:
      * \brief Слот, выполняющийся после завершения выполнения запроса
      * Начинает выполнение следующего запроса в очереди
      */
-    void downloadComplete(WebLoader* _loader);
+    void downloadComplete();
 
 private:
     /*!
