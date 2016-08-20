@@ -1,4 +1,3 @@
-#TEMPLATE = lib
 TEMPLATE = app
 TARGET = webloader
 DEPENDPATH += . src src/QFreeDesktopMime
