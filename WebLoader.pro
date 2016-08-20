@@ -19,4 +19,5 @@ SOURCES += src/HttpMultiPart_p.cpp \
            src/QFreeDesktopMime/freedesktopmime.cpp \
            src/NetworkQueue_p.cpp \
            src/NetworkRequest.cpp \
-           src/NetworkRequestInternal_p.cpp
+           src/NetworkRequestInternal_p.cpp \
+src/main.cpp

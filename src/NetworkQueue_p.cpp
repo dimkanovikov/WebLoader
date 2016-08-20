@@ -134,13 +134,13 @@ void NetworkQueue::setLoaderParams(WebLoader* _loader, NetworkRequestInternal* r
 void NetworkQueue::disconnectLoaderRequest(WebLoader* _loader, NetworkRequestInternal* _request)
 {
     disconnect(_loader, SIGNAL(downloadComplete(QByteArray, QUrl)),
-               _request, SLOT(downloadComplete(QByteArray, QUrl)));
+               _request, SIGNAL(downloadComplete(QByteArray, QUrl)));
     disconnect(_loader, SIGNAL(downloadComplete(QString, QUrl)),
-               _request, SLOT(downloadComplete(QString, QUrl)));
+               _request, SIGNAL(downloadComplete(QString, QUrl)));
     disconnect(_loader, SIGNAL(uploadProgress(int, QUrl)),
-               _request, SLOT(uploadProgress(int, QUrl)));
+               _request, SIGNAL(uploadProgress(int, QUrl)));
     disconnect(_loader, SIGNAL(downloadProgress(int, QUrl)),
-               _request, SLOT(downloadProgress(int, QUrl)));
+               _request, SIGNAL(downloadProgress(int, QUrl)));
     disconnect(_loader, &WebLoader::error,
                _request, &NetworkRequestInternal::error);
     disconnect(_loader, &WebLoader::finished,
