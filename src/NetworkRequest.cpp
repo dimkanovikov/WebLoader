@@ -113,7 +113,7 @@ void NetworkRequest::loadAsyncS(QUrl _urlToLoad, QObject *_object,
 {
     NetworkRequest* request = new NetworkRequest;
     connect(request, SIGNAL(downloadComplete(QByteArray, QUrl)), _object, _slot);
-    connect(request, SIGNAL(downloadComplete(QByteArray, QUrl)), request, SLOT(deleteLater()));
+    request->m_internal.m_networkRequest = request;
     request->loadAsync(_urlToLoad, _referer);
 }
 

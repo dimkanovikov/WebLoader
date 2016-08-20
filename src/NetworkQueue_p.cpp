@@ -161,6 +161,16 @@ void NetworkQueue::downloadComplete(WebLoader* _loader)
         disconnectLoaderRequest(_loader, request);
 
         m_busyLoaders.remove(_loader);
+
+        //
+        // Если поле m_networkRequest не пусто
+        // значит, необходимо удалить NetworkRequest,
+        // который там располагается
+        // (использование статической асинхронной загрузки)
+        //
+        if(request->m_networkRequest != nullptr) {
+            delete request->m_networkRequest;
+        }
     }
 
     //
