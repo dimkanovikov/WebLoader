@@ -8,7 +8,8 @@ NetworkQueue::NetworkQueue()
     //
     for (int i = 0; i != qMax(QThread::idealThreadCount(), 4); ++i) {
         m_freeLoaders.push_back(new WebLoader(this));
-        connect(m_freeLoaders.back(), SIGNAL(finished()), this, SLOT(downloadComplete()));
+        connect(m_freeLoaders.back(), &WebLoader::finished, this,
+                static_cast<void (NetworkQueue::*)()>(&NetworkQueue::downloadComplete));
     }
 }
 
@@ -58,14 +59,20 @@ void NetworkQueue::pop() {
     //
     // Соединим сигналы WebLoader'а с сигналами класса запроса
     //
-    connect(loader, SIGNAL(downloadComplete(QByteArray, QUrl)),
-            request, SIGNAL(downloadComplete(QByteArray, QUrl)));
-    connect(loader, SIGNAL(downloadComplete(QString, QUrl)),
-            request, SIGNAL(downloadComplete(QString, QUrl)));
-    connect(loader, SIGNAL(uploadProgress(int, QUrl)),
-            request, SIGNAL(uploadProgress(int, QUrl)));
-    connect(loader, SIGNAL(downloadProgress(int, QUrl)),
-            request, SIGNAL(downloadProgress(int, QUrl)));
+    connect(loader, static_cast<void (WebLoader::*)(QByteArray, QUrl)>
+            (&WebLoader::downloadComplete),
+            request, static_cast<void (NetworkRequestInternal::*)(QByteArray, QUrl)>
+            (&NetworkRequestInternal::downloadComplete));
+    connect(loader, static_cast<void (WebLoader::*)(QString, QUrl)>
+            (&WebLoader::downloadComplete),
+            request, static_cast<void (NetworkRequestInternal::*)(QString, QUrl)>
+            (&NetworkRequestInternal::downloadComplete));
+    connect(loader, static_cast<void (WebLoader::*)(int, QUrl)>
+            (&WebLoader::uploadProgress),
+            request, &NetworkRequestInternal::uploadProgress);
+    connect(loader, static_cast<void (WebLoader::*)(int, QUrl)>
+            (&WebLoader::downloadProgress),
+            request, &NetworkRequestInternal::downloadProgress);
     connect(loader, &WebLoader::error,
             request, &NetworkRequestInternal::error);
     connect(loader, &WebLoader::errorDetails,
@@ -130,18 +137,27 @@ void NetworkQueue::setLoaderParams(WebLoader* _loader, NetworkRequestInternal* r
     _loader->setWebRequest(request->m_request);
 }
 
-void NetworkQueue::disconnectLoaderRequest(WebLoader* _loader, NetworkRequestInternal* _request)
+void NetworkQueue::disconnectLoaderRequest(WebLoader* _loader,
+                                           NetworkRequestInternal* _request)
 {
-    disconnect(_loader, SIGNAL(downloadComplete(QByteArray, QUrl)),
-               _request, SIGNAL(downloadComplete(QByteArray, QUrl)));
-    disconnect(_loader, SIGNAL(downloadComplete(QString, QUrl)),
-               _request, SIGNAL(downloadComplete(QString, QUrl)));
-    disconnect(_loader, SIGNAL(uploadProgress(int, QUrl)),
-               _request, SIGNAL(uploadProgress(int, QUrl)));
-    disconnect(_loader, SIGNAL(downloadProgress(int, QUrl)),
-               _request, SIGNAL(downloadProgress(int, QUrl)));
+    disconnect(_loader, static_cast<void (WebLoader::*)(QByteArray, QUrl)>
+            (&WebLoader::downloadComplete),
+            _request, static_cast<void (NetworkRequestInternal::*)(QByteArray, QUrl)>
+            (&NetworkRequestInternal::downloadComplete));
+    disconnect(_loader, static_cast<void (WebLoader::*)(QString, QUrl)>
+            (&WebLoader::downloadComplete),
+            _request, static_cast<void (NetworkRequestInternal::*)(QString, QUrl)>
+            (&NetworkRequestInternal::downloadComplete));
+    disconnect(_loader, static_cast<void (WebLoader::*)(int, QUrl)>
+            (&WebLoader::uploadProgress),
+            _request, &NetworkRequestInternal::uploadProgress);
+    disconnect(_loader, static_cast<void (WebLoader::*)(int, QUrl)>
+            (&WebLoader::downloadProgress),
+            _request, &NetworkRequestInternal::downloadProgress);
     disconnect(_loader, &WebLoader::error,
-               _request, &NetworkRequestInternal::error);
+            _request, &NetworkRequestInternal::error);
+    disconnect(_loader, &WebLoader::errorDetails,
+            _request, &NetworkRequestInternal::errorDetails);
 }
 
 void NetworkQueue::downloadComplete()

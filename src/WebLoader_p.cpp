@@ -150,16 +150,19 @@ void WebLoader::run()
 
         } // switch
 
-		connect(reply, SIGNAL(uploadProgress(qint64,qint64)),
-				this, SLOT(uploadProgress(qint64,qint64)));
-		connect(reply, SIGNAL(downloadProgress(qint64,qint64)),
-                this, SLOT(downloadProgress(qint64,qint64)));
-		connect(reply, SIGNAL(error(QNetworkReply::NetworkError)),
-				this, SLOT(downloadError(QNetworkReply::NetworkError)));
-		connect(reply, SIGNAL(sslErrors(QList<QSslError>)),
-				this, SLOT(downloadSslErrors(QList<QSslError>)));
-		connect(reply, SIGNAL(sslErrors(QList<QSslError>)),
-				reply, SLOT(ignoreSslErrors()));
+        connect(reply, &QNetworkReply::uploadProgress,
+                this, static_cast<void (WebLoader::*)(qint64, qint64)>
+                (&WebLoader::uploadProgress));
+        connect(reply, &QNetworkReply::downloadProgress,
+                this, static_cast<void (WebLoader::*)(qint64, qint64)>
+                (&WebLoader::downloadProgress));
+        connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>
+                (&QNetworkReply::error),
+                this, &WebLoader::downloadError);
+        connect(reply, &QNetworkReply::sslErrors, this, &WebLoader::downloadSslErrors);
+        connect(reply, &QNetworkReply::sslErrors, reply,
+                static_cast<void (QNetworkReply::*)()>
+                (&QNetworkReply::ignoreSslErrors));
 
 		//
 		// Таймер для прерывания работы
@@ -320,6 +323,7 @@ void WebLoader::initNetworkManager()
 	//
 	// Настраиваем новое соединение
 	//
-	connect(m_networkManager, SIGNAL(finished(QNetworkReply*)),
-			this, SLOT(downloadComplete(QNetworkReply*)));
+    connect(m_networkManager, &QNetworkAccessManager::finished,
+            this, static_cast<void (WebLoader::*)(QNetworkReply*)>
+            (&WebLoader::downloadComplete));
 }

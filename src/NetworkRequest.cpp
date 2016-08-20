@@ -5,10 +5,15 @@ NetworkRequest::NetworkRequest(QObject* _parent, QNetworkCookieJar* _jar)
 {
     //
     // Соединим сигналы от internal с сигналами/слотами этого класса
-    connect(&m_internal, SIGNAL(downloadComplete(QByteArray, QUrl)),
-            this, SIGNAL(downloadComplete(QByteArray, QUrl)));
-    connect(&m_internal, SIGNAL(downloadComplete(QString, QUrl)),
-            this, SIGNAL(downloadComplete(QString, QUrl)));
+    //
+    connect(&m_internal, static_cast<void (NetworkRequestInternal::*)(QByteArray, QUrl)>
+            (&NetworkRequestInternal::downloadComplete),
+            this, static_cast<void (NetworkRequest::*)(QByteArray, QUrl)>
+            (&NetworkRequest::downloadComplete));
+    connect(&m_internal, static_cast<void (NetworkRequestInternal::*)(QString, QUrl)>
+            (&NetworkRequestInternal::downloadComplete),
+            this, static_cast<void (NetworkRequest::*)(QString, QUrl)>
+            (&NetworkRequest::downloadComplete));
     connect(&m_internal, &NetworkRequestInternal::downloadProgress,
             this, &NetworkRequest::downloadProgress);
     connect(&m_internal, &NetworkRequestInternal::uploadProgress,
@@ -113,7 +118,7 @@ void NetworkRequest::loadAsyncS(QUrl _urlToLoad, QObject *_object,
 {
     NetworkRequest* request = new NetworkRequest;
     connect(request, SIGNAL(downloadComplete(QByteArray, QUrl)), _object, _slot);
-    connect(request, SIGNAL(finished()), request, SLOT(deleteLater()));
+    connect(request, &NetworkRequest::finished, request, &NetworkRequest::deleteLater);
     request->loadAsync(_urlToLoad, _referer);
 }
 
@@ -141,8 +146,9 @@ QByteArray NetworkRequest::loadSync(QUrl _urlToLoad, QUrl _referer)
     QEventLoop loop;
     connect(this, &NetworkRequest::finished,
             &loop, &QEventLoop::quit);
-    connect(&m_internal, SIGNAL(downloadComplete(QByteArray, QUrl)),
-            this, SLOT(downloadCompleteData(QByteArray)));
+    connect(&m_internal, static_cast<void (NetworkRequestInternal::*)(QByteArray, QUrl)>
+            (&NetworkRequestInternal::downloadComplete),
+            this, &NetworkRequest::downloadCompleteData);
     loadAsync(_urlToLoad, _referer);
     loop.exec();
 
