@@ -1,4 +1,4 @@
-TEMPLATE = app
+TEMPLATE = lib
 TARGET = webloader
 DEPENDPATH += . src src/QFreeDesktopMime
 INCLUDEPATH += . src src/QFreeDesktopMime
@@ -19,5 +19,4 @@ SOURCES += src/HttpMultiPart_p.cpp \
            src/QFreeDesktopMime/freedesktopmime.cpp \
            src/NetworkQueue_p.cpp \
            src/NetworkRequest.cpp \
-           src/NetworkRequestInternal_p.cpp \
-src/main.cpp
+           src/NetworkRequestInternal_p.cpp
