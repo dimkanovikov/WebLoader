@@ -72,33 +72,33 @@ public:
     /*!
      * \brief Добавление атрибута в запрос
      */
-    void addRequestAttribute(QString _name, QVariant _value);
+    void addRequestAttribute(const QString& _name, const QVariant& _value);
     /*!
      * \brief Добавление файла в запрос
      */
-    void addRequestAttributeFile(QString _name, QString _filePath);
+    void addRequestAttributeFile(const QString& _name, const QString& _filePath);
     /*!
      * \brief Асинхронная загрузка запроса
      */
-    void loadAsync(QString _urlToLoad, QUrl _referer = QUrl());
+    void loadAsync(const QString& _urlToLoad, const QUrl& _referer = QUrl());
     /*!
      * \brief Асинхронная загрузка запроса
      */
-    void loadAsync(QUrl _urlToLoad, QUrl _referer = QUrl());
-    static void loadAsyncS(QString _urlToLoad, QObject* _object,
-                           const char* _slot, QUrl _referer = QUrl());
-    static void loadAsyncS(QUrl _urlToLoad, QObject* _object,
-                           const char* _slot, QUrl _referer = QUrl());
+    void loadAsync(const QUrl& _urlToLoad, const QUrl& _referer = QUrl());
+    static void loadAsyncS(const QString& _urlToLoad, QObject* _object,
+                           const char* _slot, const QUrl& _referer = QUrl());
+    static void loadAsyncS(const QUrl& _urlToLoad, QObject* _object,
+                           const char* _slot, const QUrl& _referer = QUrl());
     /*!
      * \brief Синхронная загрузка запроса
      */
-    QByteArray loadSync(QString _urlToLoad, QUrl _referer = QUrl());
+    QByteArray loadSync(const QString& _urlToLoad, const QUrl& _referer = QUrl());
     /*!
      * \brief Синхронная загрузка запроса
      */
-    QByteArray loadSync(QUrl _urlToLoad, QUrl _referer = QUrl());
-    static QByteArray loadSyncS(QUrl _urlToLoad, QUrl _referer = QUrl());
-    static QByteArray loadSyncS(QString _urlToLoad, QUrl _referer = QUrl());
+    QByteArray loadSync(const QUrl& _urlToLoad, const QUrl& _referer = QUrl());
+    static QByteArray loadSyncS(const QUrl& _urlToLoad, const QUrl& _referer = QUrl());
+    static QByteArray loadSyncS(const QString& _urlToLoad, const QUrl& _referer = QUrl());
     /*!
      * \brief Получение загруженного URL
      */
@@ -155,12 +155,12 @@ private slots:
     /*!
      * \brief Данные загружены. Используется при синхронной загрузке
      */
-    void downloadCompleteData(QByteArray);
+    void downloadCompleteData(const QByteArray&);
     /*!
      * \brief Ошибка при получении данных
      */
-    void slotError(QString, QUrl);
-    void slotErrorDetails(QString);
+    void slotError(const QString&, const QUrl&);
+    void slotErrorDetails(const QString&);
 };
 
 #endif // NETWORKREQUEST_H

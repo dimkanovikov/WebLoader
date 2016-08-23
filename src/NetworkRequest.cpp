@@ -87,24 +87,24 @@ void NetworkRequest::clearRequestAttributes()
     m_internal.m_request->clearAttributes();
 }
 
-void NetworkRequest::addRequestAttribute(QString _name, QVariant _value)
+void NetworkRequest::addRequestAttribute(const QString& _name, const QVariant& _value)
 {
     stop();
     m_internal.m_request->addAttribute(_name, _value);
 }
 
-void NetworkRequest::addRequestAttributeFile(QString _name, QString _filePath)
+void NetworkRequest::addRequestAttributeFile(const QString& _name, const QString& _filePath)
 {
     stop();
     m_internal.m_request->addAttribute(_name, _filePath);
 }
 
-void NetworkRequest::loadAsync(QString _urlToLoad, QUrl _referer)
+void NetworkRequest::loadAsync(const QString& _urlToLoad, const QUrl& _referer)
 {
     loadAsync(QUrl(_urlToLoad), _referer);
 }
 
-void NetworkRequest::loadAsync(QUrl _urlToLoad, QUrl _referer)
+void NetworkRequest::loadAsync(const QUrl& _urlToLoad, const QUrl& _referer)
 {
     //
     // Получаем инстанс очереди
@@ -123,14 +123,14 @@ void NetworkRequest::loadAsync(QUrl _urlToLoad, QUrl _referer)
     nq->put(&m_internal);
 }
 
-void NetworkRequest::loadAsyncS(QString _urlToLoad, QObject *_object,
-                                const char* _slot, QUrl _referer)
+void NetworkRequest::loadAsyncS(const QString& _urlToLoad, QObject *_object,
+                                const char* _slot, const QUrl& _referer)
 {
     loadAsyncS(QUrl(_urlToLoad), _object, _slot, _referer);
 }
 
-void NetworkRequest::loadAsyncS(QUrl _urlToLoad, QObject *_object,
-                               const char* _slot, QUrl _referer)
+void NetworkRequest::loadAsyncS(const QUrl& _urlToLoad, QObject *_object,
+                               const char* _slot, const QUrl& _referer)
 {
     NetworkRequest* request = new NetworkRequest;
     connect(request, SIGNAL(downloadComplete(QByteArray, QUrl)), _object, _slot);
@@ -138,23 +138,23 @@ void NetworkRequest::loadAsyncS(QUrl _urlToLoad, QObject *_object,
     request->loadAsync(_urlToLoad, _referer);
 }
 
-QByteArray NetworkRequest::loadSyncS(QString _urlToLoad, QUrl _referer)
+QByteArray NetworkRequest::loadSyncS(const QString& _urlToLoad, const QUrl& _referer)
 {
     return loadSyncS(QUrl(_urlToLoad), _referer);
 }
 
-QByteArray NetworkRequest::loadSyncS(QUrl _urlToLoad, QUrl _referer)
+QByteArray NetworkRequest::loadSyncS(const QUrl& _urlToLoad, const QUrl& _referer)
 {
     NetworkRequest request;
     return request.loadSync(_urlToLoad, _referer);
 }
 
-QByteArray NetworkRequest::loadSync(QString _urlToLoad, QUrl _referer)
+QByteArray NetworkRequest::loadSync(const QString& _urlToLoad, const QUrl& _referer)
 {
     return loadSync(QUrl(_urlToLoad), _referer);
 }
 
-QByteArray NetworkRequest::loadSync(QUrl _urlToLoad, QUrl _referer)
+QByteArray NetworkRequest::loadSync(const QUrl& _urlToLoad, const QUrl& _referer)
 {
     //
     // Для синхронного запроса используем QEventLoop и асинхронный запрос
@@ -176,18 +176,18 @@ QUrl NetworkRequest::url() const
     return m_internal.m_request->urlToLoad();
 }
 
-void NetworkRequest::downloadCompleteData(QByteArray _data)
+void NetworkRequest::downloadCompleteData(const QByteArray& _data)
 {
     m_downloadedData = _data;
 }
 
-void NetworkRequest::slotError(QString _errorStr, QUrl _url)
+void NetworkRequest::slotError(const QString& _errorStr, const QUrl& _url)
 {
     m_lastError = _errorStr;
     emit error(_errorStr, _url);
 }
 
-void NetworkRequest::slotErrorDetails(QString _errorStr)
+void NetworkRequest::slotErrorDetails(const QString& _errorStr)
 {
     m_lastErrorDetails = _errorStr;
 }

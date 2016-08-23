@@ -31,13 +31,13 @@ HttpPart::HttpPartType HttpPart::type() const
 	return m_type;
 }
 
-void HttpPart::setText(const QString _name, const QString _value)
+void HttpPart::setText(const QString& _name, const QString& _value)
 {
     setName(_name);
     setValue(_value);
 }
 
-void HttpPart::setFile(const QString _name, const QString _filePath)
+void HttpPart::setFile(const QString& _name, const QString& _filePath)
 {
     setName(_name);
     setFilePath(_filePath);
@@ -65,24 +65,24 @@ QString HttpPart::filePath() const
 
 
 
-void HttpPart::setName(const QString _name)
+void HttpPart::setName(const QString& _name)
 {
     if (m_name != _name)
         m_name = _name;
 }
 
-void HttpPart::setValue(const QString _value)
+void HttpPart::setValue(const QString& _value)
 {
     if (m_value != _value)
         m_value = _value;
 }
 
-void HttpPart::setFileName(const QString _fileName)
+void HttpPart::setFileName(const QString& _fileName)
 {
     setValue(_fileName);
 }
 
-void HttpPart::setFilePath(const QString _filePath)
+void HttpPart::setFilePath(const QString& _filePath)
 {
     if (m_filePath != _filePath) {
         m_filePath = _filePath;
@@ -99,14 +99,14 @@ HttpMultiPart::HttpMultiPart()
 {
 }
 
-void HttpMultiPart::setBoundary(const QString _boundary)
+void HttpMultiPart::setBoundary(const QString& _boundary)
 {
     if (m_boundary != _boundary) {
         m_boundary = _boundary;
     }
 }
 
-void HttpMultiPart::addPart(HttpPart _part)
+void HttpMultiPart::addPart(const HttpPart& _part)
 {
     m_parts.append(_part);
 }
@@ -126,7 +126,7 @@ QByteArray HttpMultiPart::data()
 	return multiPartData;
 }
 
-QByteArray HttpMultiPart::makeDataFromPart(HttpPart _part)
+QByteArray HttpMultiPart::makeDataFromPart(const HttpPart& _part)
 {
 	QByteArray partData;
     switch (_part.type()) {
@@ -142,7 +142,7 @@ QByteArray HttpMultiPart::makeDataFromPart(HttpPart _part)
 	return partData;
 }
 
-QByteArray HttpMultiPart::makeDataFromTextPart(HttpPart _part)
+QByteArray HttpMultiPart::makeDataFromTextPart(const HttpPart& _part)
 {
 	QByteArray partData;
 
@@ -160,7 +160,7 @@ QByteArray HttpMultiPart::makeDataFromTextPart(HttpPart _part)
 	return partData;
 }
 
-QByteArray HttpMultiPart::makeDataFromFilePart(HttpPart _part)
+QByteArray HttpMultiPart::makeDataFromFilePart(const HttpPart& _part)
 {
 	QByteArray partData;
 

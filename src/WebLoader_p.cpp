@@ -120,7 +120,7 @@ void WebLoader::setWebRequest(WebRequest* _request) {
     this->m_request = _request;
 }
 
-void WebLoader::loadAsync(QUrl _urlToLoad, QUrl _referer)
+void WebLoader::loadAsync(const QUrl& _urlToLoad, const QUrl& _referer)
 {
 	stop();
 

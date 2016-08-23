@@ -50,7 +50,7 @@ QUrl WebRequest::urlToLoad() const
 	return m_urlToLoad;
 }
 
-void WebRequest::setUrlToLoad(QUrl _url)
+void WebRequest::setUrlToLoad(const QUrl& _url)
 {
     if (urlToLoad() != _url)
         m_urlToLoad = _url;
@@ -61,7 +61,7 @@ QUrl WebRequest::urlReferer() const
 	return m_urlReferer;
 }
 
-void WebRequest::setUrlReferer(QUrl _url)
+void WebRequest::setUrlReferer(const QUrl& _url)
 {
     if (urlReferer() != _url)
         m_urlReferer = _url;
@@ -73,7 +73,7 @@ void WebRequest::clearAttributes()
 	m_attributeFiles.clear();
 }
 
-void WebRequest::addAttribute(QString _name, QVariant _value)
+void WebRequest::addAttribute(const QString& _name, const QVariant& _value)
 {
 	QPair< QString, QVariant > attribute;
     attribute.first = _name;
@@ -81,7 +81,7 @@ void WebRequest::addAttribute(QString _name, QVariant _value)
     addAttribute(attribute);
 }
 
-void WebRequest::addAttributeFile(QString _name, QString _filePath)
+void WebRequest::addAttributeFile(const QString& _name, const QString& _filePath)
 {
 	QPair< QString, QString > attributeFile;
     attributeFile.first = _name;
@@ -153,7 +153,7 @@ QList<QPair<QString, QVariant> > WebRequest::attributes() const
 	return m_attributes;
 }
 
-void WebRequest::addAttribute(QPair<QString, QVariant> _attribute)
+void WebRequest::addAttribute(const QPair<QString, QVariant>& _attribute)
 {
     if (!attributes().contains(_attribute))
         m_attributes.append(_attribute);
@@ -164,7 +164,7 @@ QList<QPair<QString, QString> > WebRequest::attributeFiles() const
 	return m_attributeFiles;
 }
 
-void WebRequest::addAttributeFile(QPair<QString, QString> _attributeFile)
+void WebRequest::addAttributeFile(const QPair<QString, QString>& _attributeFile)
 {
     if (!attributeFiles().contains(_attributeFile))
         m_attributeFiles.append(_attributeFile);

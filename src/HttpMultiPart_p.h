@@ -32,8 +32,8 @@ public:
 public:
     HttpPart(HttpPartType _type = Text);
 	HttpPartType type() const;
-    void setText(const QString _name, const QString _value);
-    void setFile(const QString _name, const QString _filePath);
+    void setText(const QString& _name, const QString& _value);
+    void setFile(const QString& _name, const QString& _filePath);
 
 public:
 	QString name() const;
@@ -43,10 +43,10 @@ public:
 
 
 private:
-    void setName(const QString _name);
-    void setValue(const QString _value);
-    void setFileName(const QString _fileName);
-    void setFilePath(const QString _filePath);
+    void setName(const QString& _name);
+    void setValue(const QString& _value);
+    void setFileName(const QString& _fileName);
+    void setFilePath(const QString& _filePath);
 
 private:
 	HttpPartType m_type;
@@ -59,15 +59,15 @@ class HttpMultiPart
 {
 public:
 	HttpMultiPart();
-    void setBoundary(const QString _boundary);
-    void addPart(HttpPart _part);
+    void setBoundary(const QString& _boundary);
+    void addPart(const HttpPart& _part);
 
 	QByteArray data();
 
 private:
-    QByteArray makeDataFromPart(HttpPart _part);
-    QByteArray makeDataFromTextPart(HttpPart _part);
-    QByteArray makeDataFromFilePart(HttpPart _part);
+    QByteArray makeDataFromPart(const HttpPart& _part);
+    QByteArray makeDataFromTextPart(const HttpPart& _part);
+    QByteArray makeDataFromFilePart(const HttpPart& _part);
 	QByteArray makeEndData();
 
 private:

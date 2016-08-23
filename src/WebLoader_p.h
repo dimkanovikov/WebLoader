@@ -78,7 +78,7 @@ public:
 	  \param urlToLoad - ссылка для запроса
 	  \param referer   - реферальная ссылка
       */
-    void loadAsync(QUrl _urlToLoad, QUrl _referer = QUrl());
+    void loadAsync(const QUrl& _urlToLoad, const QUrl& _referer = QUrl());
 
     /**
      * @brief Остановить выполнение
