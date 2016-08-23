@@ -39,23 +39,16 @@ class WebLoader : public QThread
 public:
 
 public:
-	/*!
-	  \fn Конструктор
-	  */
     explicit WebLoader(QObject* _parent = 0, QNetworkCookieJar* _jar = 0);
-	/*!
-	  \fn Деструктор
-	  */
 	virtual ~WebLoader();
 
 	/*!
-	  \fn Установка куков для сессии загрузчика
-	  \param cookie - коллекция куков
+      \brief Установка куков для сессии загрузчика
 	  */
     void setCookieJar(QNetworkCookieJar* _cookieJar);
-	/*!
-	  \fn Установка метода запроса
-	  \param method - метод запроса
+
+    /*!
+      \brief Установка метода запроса
 	  */
     void setRequestMethod(NetworkRequest::RequestMethod _method);
 
@@ -63,12 +56,14 @@ public:
      * @brief Установить таймаут загрузки
      */
     void setLoadingTimeout(int _msecs);
+
+    /*!
+     * \brief Установка WebRequest
+     */
     void setWebRequest(WebRequest* _request);
 
 	/*!
-      \fn Отправка запроса (асинхронное выполнение)
-	  \param urlToLoad - ссылка для запроса
-	  \param referer   - реферальная ссылка
+      \brief Отправка запроса (асинхронное выполнение)
       */
     void loadAsync(const QUrl& _urlToLoad, const QUrl& _referer = QUrl());
 
@@ -79,25 +74,24 @@ public:
 
 signals:
 	/*!
-	  \fn Прогресс отправки запроса на сервер
-	  \param Процент отправленных данных
+      \brief Прогресс отправки запроса на сервер
 	  */
     void uploadProgress(int, QUrl);
-	/*!
-	  \fn Прогресс загрузки данных с сервера
-	  \param Процент загруженных данных
+
+    /*!
+      \brief Прогресс загрузки данных с сервера
 	  */
     void downloadProgress(int, QUrl);
-	/*!
-	  \fn Данные загружены
-	  \param Загруженные данные
+
+    /*!
+      \brief Данные загружены
 	  */
     void downloadComplete(WebLoader*);
     void downloadComplete(QByteArray, QUrl);
     void downloadComplete(QString, QUrl);
-	/*!
-	  \fn Сигнал об ошибке
-	  \param Текст ошибки
+
+    /*!
+      \brief Сигнал об ошибке
 	  */
     void error(QString, QUrl);
     void errorDetails(QString, QUrl);
@@ -108,37 +102,36 @@ signals:
 
 private:
 	/*!
-	  \fn Работа потока
+      \brief Работа потока
 	  */
 	void run();
 
 
 private slots:
 	/*!
-	  \fn Прогресс отправки запроса на сервер
-	  \param uploadedBytes - отправлено байт
-	  \param totalBytes - байт к отправке
+      \brief Прогресс отправки запроса на сервер
+      * uploadedBytes - отправлено байт, totalBytes - байт к отправке
 	  */
     void uploadProgress(qint64 _uploadedBytes, qint64 _totalBytes);
-	/*!
-	  \fn Прогресс загрузки данных с сервера
-	  \param recievedBytes загружено байт
-	  \param totalBytes - байт к отправке
+
+    /*!
+      \brief Прогресс загрузки данных с сервера
+      * recievedBytes загружено байт, totalBytes - байт к отправке
 	  */
     void downloadProgress(qint64 _recievedBytes, qint64 _totalBytes);
-	/*!
-	  \fn Окончание загрузки страницы
-	  \param reply - ответ сервера
+
+    /*!
+      \brief Окончание загрузки страницы
 	  */
     void downloadComplete(QNetworkReply* _reply);
-	/*!
-	  \fn Ошибка при загрузки страницы
-	  \param networkError - ошибка
+
+    /*!
+      \brief Ошибка при загрузки страницы
 	  */
     void downloadError(QNetworkReply::NetworkError _networkError);
-	/*!
-	 * \fn Ошибки при защищённом подключении
-	 * \param Список ошибок
+
+    /*!
+     * \brief Ошибки при защищённом подключении
 	 */
 	void downloadSslErrors(const QList<QSslError>& _errors);
 

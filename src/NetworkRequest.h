@@ -43,58 +43,58 @@ public:
         Post
     };
 
-    /*!
-     * \brief Конструктор
-     */
     explicit NetworkRequest(QObject* _parent = 0, QNetworkCookieJar* _jar = 0);
-    /*!
-     * \brief Деструктор
-     */
     virtual ~NetworkRequest();
 
     /*!
      * \brief Установка cookie для загрузчика
      */
     void setCookieJar(QNetworkCookieJar* _cookieJar);
+
     /*!
      * \brief Получение cookie загрузчика
      */
     QNetworkCookieJar* getCookieJar();
+
     /*!
      * \brief Установка метода запроса
      */
     void setRequestMethod(RequestMethod _method);
+
     /*!
      * \brief Получение метода запроса
      */
     RequestMethod getRequestMethod() const;
+
     /*!
      * \brief Установка таймаута загрузки
      */
     void setLoadingTimeout(int _loadingTimeout);
+
     /*!
      * \brief Получение таймаута загрузки
      */
     int getLoadingTimeout() const;
+
     /*!
      * \brief Очистить все старые атрибуты запроса
      */
     void clearRequestAttributes();
+
     /*!
      * \brief Добавление атрибута в запрос
      */
     void addRequestAttribute(const QString& _name, const QVariant& _value);
+
     /*!
      * \brief Добавление файла в запрос
      */
     void addRequestAttributeFile(const QString& _name, const QString& _filePath);
+
     /*!
      * \brief Асинхронная загрузка запроса
      */
     void loadAsync(const QString& _urlToLoad, const QUrl& _referer = QUrl());
-    /*!
-     * \brief Асинхронная загрузка запроса
-     */
     void loadAsync(const QUrl& _urlToLoad, const QUrl& _referer = QUrl());
     static void loadAsyncS(const QString& _urlToLoad, QObject* _object,
                            const char* _slot, const QUrl& _referer = QUrl());
@@ -104,16 +104,15 @@ public:
      * \brief Синхронная загрузка запроса
      */
     QByteArray loadSync(const QString& _urlToLoad, const QUrl& _referer = QUrl());
-    /*!
-     * \brief Синхронная загрузка запроса
-     */
     QByteArray loadSync(const QUrl& _urlToLoad, const QUrl& _referer = QUrl());
     static QByteArray loadSyncS(const QUrl& _urlToLoad, const QUrl& _referer = QUrl());
     static QByteArray loadSyncS(const QString& _urlToLoad, const QUrl& _referer = QUrl());
+
     /*!
      * \brief Получение загруженного URL
      */
     QUrl url() const;
+
     /*!
      * \brief Получение строки с последней ошибкой
      */
@@ -125,20 +124,23 @@ signals:
      * \brief Прогресс отправки запроса на сервер
      */
     void uploadProgress(int, QUrl);
+
     /*!
      * \brief Прогресс загрузки данных с сервера
      */
     void downloadProgress(int, QUrl);
+
     /*!
      * \brief Данные загружены
      */
     void downloadComplete(QByteArray, QUrl);
     void downloadComplete(QString, QUrl);
+    void finished();
+
     /*!
      * \brief Сигнал об ошибке
      */
     void error(QString, QUrl);
-    void finished();
 
 private:
 
@@ -146,10 +148,12 @@ private:
      * \brief Объект, используемый в очереди запросов
      */
     NetworkRequestPrivate *m_internal;
+
     /*!
      * \brief Загруженные данные в случае, если используется синхронная загрузка
      */
     QByteArray m_downloadedData;
+
     /*!
      * \brief Строка, содержащая описание последней ошибки
      */
@@ -167,6 +171,7 @@ private slots:
      * \brief Данные загружены. Используется при синхронной загрузке
      */
     void downloadCompleteData(const QByteArray&);
+
     /*!
      * \brief Ошибка при получении данных
      */

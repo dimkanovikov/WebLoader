@@ -50,21 +50,24 @@ signals:
      * \brief Прогресс отправки запроса на сервер
      */
     void uploadProgress(int, QUrl);
+
     /*!
      * \brief Прогресс загрузки данных с сервера
      */
     void downloadProgress(int, QUrl);
+
     /*!
      * \brief Данные загружены
      */
     void downloadComplete(QByteArray, QUrl);
     void downloadComplete(QString, QUrl);
+    void finished();
+
     /*!
      * \brief Сигнал об ошибке
      */
     void error(QString, QUrl);
     void errorDetails(QString, QUrl);
-    void finished();
 
 public slots:
 };

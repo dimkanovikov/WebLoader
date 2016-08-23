@@ -38,10 +38,12 @@ public:
      * \brief Метод, возвращающий указатель на инстанс класса
      */
     static NetworkQueue* getInstance();
+
     /*!
      * \brief Метод, помещающий в очередь запрос
      */
     void put(NetworkRequestPrivate*);
+
     /*!
      * \brief Метод, останавливающий выполняющийся запрос
      * или же убирающий его из очереди
@@ -53,16 +55,19 @@ signals:
      * \brief Прогресс отправки запроса на сервер
      */
     void uploadProgress(int);
+
     /*!
      * \brief Прогресс загрузки данных с сервера
      */
     void downloadProgress(int);
+
     /*!
      * \brief Данные загружены
      */
     void downloadComplete(QByteArray);
     void downloadComplete(QString);
     void finished();
+
     /*!
      * \brief Сигнал об ошибке
      */
@@ -88,32 +93,39 @@ private:
      * \brief Извлечение запроса из очереди и его выполнение
      */
     void pop();
+
     /*!
      * \brief Настройка параметров для WebLoader'а
      */
     void setLoaderParams(WebLoader* _loader, NetworkRequestPrivate* _request);
+
     /*!
      * \brief Отключение сигналов WebLoader'а
      * от сигналов NetworkRequestInternal
      */
     void disconnectLoaderRequest(WebLoader* _loader, NetworkRequestPrivate* _request);
+
     /*!
      * \brief Очередь запросов
      */
     QList<NetworkRequestPrivate*> m_queue;
+
     /*!
      * \brief Множество, содержащее запросы в очереди
      * Необходим для быстрого определения, находится ли запрос в очереди
      */
     QSet<NetworkRequestPrivate*> m_inQueue;
+
     /*!
      * \brief WebLoader'ы, выполняющие запрос и соответствующие им запросы
      */
     QMap<WebLoader*, NetworkRequestPrivate*> m_busyLoaders;
+
     /*!
      * \brief Список свободных WebLoader'ов
      */
     QList<WebLoader*> m_freeLoaders;
+
     QMutex m_mtx;
 };
 

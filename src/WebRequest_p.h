@@ -30,57 +30,54 @@
 class WebRequest
 {
 public:
-	/*!
-	  \fn Конструктор
-	  */
 	WebRequest();
 	~WebRequest();
 
 	/*!
-	  \fn Ссылка запроса
+      \brief Ссылка запроса
 	  */
 	QUrl urlToLoad() const;
-	/*!
-	  \fn Установка ссылки для запроса
-	  \param url - ссылка
+
+    /*!
+      \brief Установка ссылки для запроса
 	  */
     void setUrlToLoad(const QUrl& _url);
 
 	/*!
-	  \fn Ссылка referer
+      \brief Ссылка referer
 	  */
 	QUrl urlReferer() const;
-	/*!
-	  \fn Установка ссылки referer'а
-	  \param url - ссылка
+
+    /*!
+      \brief Установка ссылки referer'а
 	  */
     void setUrlReferer(const QUrl& _url);
-	/*!
-	 * \fn Очистить список атрибутов
+
+    /*!
+     * \brief Очистить список атрибутов
 	 */
 	void clearAttributes();
-	/*!
-	  \fn Добавление текстового атрибута в запрос
-	  \param name - название атрибута
-	  \param value - значение атрибута
+
+    /*!
+      \brief Добавление текстового атрибута в запрос
+      * name - название атрибута, value - значение атрибута
 	  */
     void addAttribute(const QString& _name, const QVariant& _value);
-	/*!
-	  \fn Добавление атрибута-файла в запрос
-	  \param name - название атрибута
-	  \param filePath - путь к файлу
+
+    /*!
+      \brief Добавление атрибута-файла в запрос
+      * name - название атрибута, filePath - путь к файлу
 	  */
     void addAttributeFile(const QString& _name, const QString& _filePath);
 
 	/*!
-	  \fn Сформированный объект класса QNetworkRequest
+      \brief Сформированный объект класса QNetworkRequest
 	  */
     QNetworkRequest networkRequest(bool _addContentHeaders = false);
 
 	/*!
-	  \fn Атрибуты запроса
+      \breif Атрибуты запроса
 	  */
-
 	QByteArray  multiPartData();
 
 //*****************************************************************************
@@ -88,21 +85,24 @@ public:
 
 private:
 	/*!
-	  \fn Текстовые атрибуты запроса
+      \brief Текстовые атрибуты запроса
 	  */
 	QList< QPair< QString, QVariant > > attributes() const;
-	/*!
-	  \fn Добавление текстового атрибута в запрос
-	  \param attribute - имя + значения атрибута
+
+    /*!
+      \brief Добавление текстового атрибута в запрос
+      * attribute - имя + значения атрибута
 	  */
     void addAttribute(const QPair< QString, QVariant >& _attribute);
-	/*!
-	  \fn Атрибуты-файлы запроса
+
+    /*!
+      \brief Атрибуты-файлы запроса
 	  */
 	QList<QPair<QString, QString> > attributeFiles() const;
-	/*!
-	  \fn Добавление атрибута-файла в запрос
-	  \param attributeFile - имя атрибута + путь к файлу
+
+    /*!
+      \brief Добавление атрибута-файла в запрос
+      * attributeFile - имя атрибута + путь к файлу
 	  */
     void addAttributeFile(const QPair<QString, QString>& _attributeFile);
 
