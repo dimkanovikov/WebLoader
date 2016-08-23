@@ -19,9 +19,11 @@
 
 #include <QEventLoop>
 #include <QTimer>
+#include <QNetworkCookieJar>
 
-#include "NetworkQueue_p.h"
-#include "NetworkRequestPrivate_p.h"
+#include "WebLoader_p.h"
+
+class NetworkRequestPrivate;
 
 /*!
  * \brief Пользовательский класс для создания GET и POST запросов
@@ -134,7 +136,7 @@ private:
     /*!
      * \brief Объект, используемый в очереди запросов
      */
-    NetworkRequestPrivate m_internal;
+    NetworkRequestPrivate *m_internal;
     /*!
      * \brief Загруженные данные в случае, если используется синхронная загрузка
      */
