@@ -19,11 +19,11 @@
 
 #include <QEventLoop>
 #include <QTimer>
-#include <QNetworkCookieJar>
-
-#include "WebLoader_p.h"
+#include <QUrl>
 
 class NetworkRequestPrivate;
+class WebRequest;
+class QNetworkCookieJar;
 
 /*!
  * \brief Пользовательский класс для создания GET и POST запросов
@@ -33,6 +33,15 @@ class NetworkRequest : public QObject
 {
     Q_OBJECT
 public:
+
+    /*!
+    \enum Метод запроса
+    */
+    enum RequestMethod {
+        Undefined, /*!< Метод не установлен */
+        Get,
+        Post
+    };
 
     /*!
      * \brief Конструктор
@@ -54,11 +63,11 @@ public:
     /*!
      * \brief Установка метода запроса
      */
-    void setRequestMethod(WebLoader::RequestMethod _method);
+    void setRequestMethod(RequestMethod _method);
     /*!
      * \brief Получение метода запроса
      */
-    WebLoader::RequestMethod getRequestMethod() const;
+    RequestMethod getRequestMethod() const;
     /*!
      * \brief Установка таймаута загрузки
      */

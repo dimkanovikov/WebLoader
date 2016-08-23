@@ -15,6 +15,9 @@
 */
 
 #include "NetworkQueue_p.h"
+#include "WebLoader_p.h"
+#include "WebRequest_p.h"
+#include "NetworkRequestPrivate_p.h"
 
 NetworkQueue::NetworkQueue()
 {

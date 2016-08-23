@@ -17,6 +17,8 @@
 #include "NetworkRequest.h"
 #include "NetworkQueue_p.h"
 #include "NetworkRequestPrivate_p.h"
+#include "WebLoader_p.h"
+#include "WebRequest_p.h"
 
 NetworkRequest::NetworkRequest(QObject* _parent, QNetworkCookieJar* _jar)
     : QObject(_parent), m_internal(new NetworkRequestPrivate(this, _jar))
@@ -61,13 +63,13 @@ QNetworkCookieJar* NetworkRequest::getCookieJar()
     return m_internal->m_cookieJar;
 }
 
-void NetworkRequest::setRequestMethod(WebLoader::RequestMethod _method)
+void NetworkRequest::setRequestMethod(NetworkRequest::RequestMethod _method)
 {
     stop();
     m_internal->m_method = _method;
 }
 
-WebLoader::RequestMethod NetworkRequest::getRequestMethod() const
+NetworkRequest::RequestMethod NetworkRequest::getRequestMethod() const
 {
     return m_internal->m_method;
 }

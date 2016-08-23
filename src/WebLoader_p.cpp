@@ -15,6 +15,7 @@
 */
 
 #include "WebLoader_p.h"
+#include "WebRequest_p.h"
 
 #include <QtNetwork/QNetworkCookieJar>
 #include <QtNetwork/QNetworkAccessManager>
@@ -85,7 +86,7 @@ WebLoader::WebLoader(QObject* _parent, QNetworkCookieJar* _jar) :
 	m_networkManager(0),
 	m_cookieJar(_jar),
 	m_request(new WebRequest),
-	m_requestMethod(Undefined),
+    m_requestMethod(NetworkRequest::Undefined),
 	m_isNeedRedirect(true),
 	m_loadingTimeout(20000)
 {
@@ -103,7 +104,7 @@ void WebLoader::setCookieJar(QNetworkCookieJar* _jar)
         m_cookieJar = _jar;
 }
 
-void WebLoader::setRequestMethod(WebLoader::RequestMethod _method)
+void WebLoader::setRequestMethod(NetworkRequest::RequestMethod _method)
 {
     if (m_requestMethod != _method)
         m_requestMethod = _method;
@@ -151,13 +152,13 @@ void WebLoader::run()
 		switch (m_requestMethod) {
 
 			default:
-			case WebLoader::Get: {
+            case NetworkRequest::Get: {
                 const QNetworkRequest request = this->m_request->networkRequest();
                 reply = m_networkManager->get(request);
 				break;
 			}
 
-			case WebLoader::Post: {
+            case NetworkRequest::Post: {
                 const QNetworkRequest networkRequest = m_request->networkRequest(true);
                 const QByteArray data = m_request->multiPartData();
 				reply = m_networkManager->post(networkRequest, data);
@@ -261,7 +262,7 @@ void WebLoader::downloadComplete(QNetworkReply* _reply)
 		// Получаем ссылку для загрузки из заголовка ответа [Loacation]
         QUrl redirectUrl = _reply->header(QNetworkRequest::LocationHeader).toUrl();
         m_request->setUrlToLoad(redirectUrl);
-        setRequestMethod(WebLoader::Get); // Редирект всегда методом Get
+        setRequestMethod(NetworkRequest::Get); // Редирект всегда методом Get
 		m_isNeedRedirect = true;
 	} else {
 		//! Загружены данные [reply->bytesAvailable()]

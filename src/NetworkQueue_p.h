@@ -17,11 +17,13 @@
 #ifndef NETWORKQUEUE_H
 #define NETWORKQUEUE_H
 
-#include <QVector>
+#include <QObject>
 #include <QMutex>
+#include <QSet>
+#include <QMap>
 
-#include "WebLoader_p.h"
-#include "NetworkRequestPrivate_p.h"
+class WebLoader;
+class NetworkRequestPrivate;
 
 /*!
  * \brief Класс, реализующий очередь запросов

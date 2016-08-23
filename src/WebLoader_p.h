@@ -17,7 +17,7 @@
 #ifndef WEBLOADER_H
 #define WEBLOADER_H
 
-#include "WebRequest_p.h"
+#include "NetworkRequest.h"
 
 #include <QtCore/QThread>
 #include <QtCore/QUrl>
@@ -25,7 +25,7 @@
 
 class QNetworkAccessManager;
 class QNetworkCookieJar;
-
+class WebRequest;
 
 /*!
   \class WebLoader
@@ -37,14 +37,6 @@ class WebLoader : public QThread
 	Q_OBJECT
 
 public:
-	/*!
-	  \enum Метод запроса
-	  */
-	enum RequestMethod {
-		Undefined, /*!< Метод не установлен */
-		Get,
-		Post
-	};
 
 public:
 	/*!
@@ -65,7 +57,7 @@ public:
 	  \fn Установка метода запроса
 	  \param method - метод запроса
 	  */
-    void setRequestMethod(RequestMethod _method);
+    void setRequestMethod(NetworkRequest::RequestMethod _method);
 
     /**
      * @brief Установить таймаут загрузки
@@ -162,7 +154,7 @@ private:
     QNetworkAccessManager* m_networkManager;
     QNetworkCookieJar* m_cookieJar;
     WebRequest* m_request;
-	RequestMethod m_requestMethod;
+    NetworkRequest::RequestMethod m_requestMethod;
 	bool m_isNeedRedirect;
     QUrl m_initUrl;
 

@@ -19,7 +19,9 @@
 
 #include <QObject>
 
-#include "WebLoader_p.h"
+#include "NetworkRequest.h"
+
+class WebLoader;
 
 /*!
  * \brief Внутренний класс для хранения в очереди запросов
@@ -37,7 +39,7 @@ public:
     QUrl m_urlToLoad;
     QUrl m_referer;
     QNetworkCookieJar* m_cookieJar;
-    WebLoader::RequestMethod m_method;
+    NetworkRequest::RequestMethod m_method;
     int m_loadingTimeout;
     WebRequest* m_request;
 
