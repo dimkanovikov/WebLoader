@@ -38,7 +38,6 @@ NetworkQueue* NetworkQueue::getInstance() {
 }
 
 void NetworkQueue::put(NetworkRequestPrivate* _request) {
-    m_mtx.lock();
     //
     // Положим в очередь пришедший запрос
     //
@@ -52,7 +51,6 @@ void NetworkQueue::put(NetworkRequestPrivate* _request) {
     if (!m_freeLoaders.empty()) {
         pop();
     }
-    m_mtx.unlock();
 }
 
 void NetworkQueue::pop() {
@@ -78,7 +76,7 @@ void NetworkQueue::pop() {
     //
     // Соединим сигналы WebLoader'а с сигналами класса запроса
     //
-    connect(loader, static_cast<void (WebLoader::*)(QByteArray, QUrl)>\(&WebLoader::downloadComplete),
+    connect(loader, static_cast<void (WebLoader::*)(QByteArray, QUrl)>(&WebLoader::downloadComplete),
             request, static_cast<void (NetworkRequestPrivate::*)(QByteArray, QUrl)>(&NetworkRequestPrivate::downloadComplete));
     connect(loader, static_cast<void (WebLoader::*)(QString, QUrl)>(&WebLoader::downloadComplete),
             request, static_cast<void (NetworkRequestPrivate::*)(QString, QUrl)>(&NetworkRequestPrivate::downloadComplete));
@@ -96,7 +94,6 @@ void NetworkQueue::pop() {
 }
 
 void NetworkQueue::stop(NetworkRequestPrivate* _internal) {
-    m_mtx.lock();
     if (m_inQueue.contains(_internal)) {
         //
         // Либо запрос еще в очереди
@@ -137,7 +134,6 @@ void NetworkQueue::stop(NetworkRequestPrivate* _internal) {
             }
         }
     }
-    m_mtx.unlock();
 }
 
 void NetworkQueue::setLoaderParams(WebLoader* _loader, NetworkRequestPrivate* request)
@@ -165,7 +161,6 @@ void NetworkQueue::disconnectLoaderRequest(WebLoader* _loader,
 
 void NetworkQueue::downloadComplete()
 {
-    m_mtx.lock();
     WebLoader* loader = qobject_cast<WebLoader*>(sender());
     if (m_busyLoaders.contains(loader)) {
         //
@@ -192,5 +187,4 @@ void NetworkQueue::downloadComplete()
     if (!m_queue.empty()) {
         pop();
     }
-    m_mtx.unlock();
 }

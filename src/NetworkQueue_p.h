@@ -18,7 +18,6 @@
 #define NETWORKQUEUE_H
 
 #include <QObject>
-#include <QMutex>
 #include <QSet>
 #include <QMap>
 
@@ -125,8 +124,6 @@ private:
      * \brief Список свободных WebLoader'ов
      */
     QList<WebLoader*> m_freeLoaders;
-
-    QMutex m_mtx;
 };
 
 #endif // NETWORKQUEUE_H
