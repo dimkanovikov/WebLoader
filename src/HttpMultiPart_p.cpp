@@ -15,7 +15,7 @@
 */
 
 #include "HttpMultiPart_p.h"
-#include "QFreeDesktopMime/freedesktopmime.h"
+#include "QMimeDatabase"
 #include <QtCore/QStringList>
 #include <QtCore/QFile>
 
@@ -168,13 +168,10 @@ QByteArray HttpMultiPart::makeDataFromFilePart(HttpPart _part)
     partData.append(boundary());
     partData.append(crlf());
 
-	{
-        QFile uploadFile(_part.filePath());
-        uploadFile.open(QIODevice::ReadOnly);
-               // Определение mime типа файла
-               QFreeDesktopMime mimeTypeDetector;
-        QString contentType = mimeTypeDetector.fromFile(&uploadFile);
-        uploadFile.seek(0); // Несколько байт были считаны
+    {
+        // Определение mime типа файла
+        QMimeDatabase mimeTypeDetector;
+        QString contentType = mimeTypeDetector.mimeTypeForFile(_part.filePath()).name();
 
 		partData.append(
                     QString("Content-Disposition: form-data; name=\"%1\"; filename=\"%2\"%4"
@@ -186,6 +183,8 @@ QByteArray HttpMultiPart::makeDataFromFilePart(HttpPart _part)
                           crlf())
 					);
 
+        QFile uploadFile(_part.filePath());
+        uploadFile.open(QIODevice::ReadOnly);
         while (!uploadFile.atEnd()) {
 			QByteArray readed = uploadFile.read(1024);
             partData.append(readed);
