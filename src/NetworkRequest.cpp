@@ -26,14 +26,10 @@ NetworkRequest::NetworkRequest(QObject* _parent, QNetworkCookieJar* _jar)
     //
     // Соединим сигналы от internal с сигналами/слотами этого класса
     //
-    connect(m_internal, static_cast<void (NetworkRequestPrivate::*)(QByteArray, QUrl)>
-            (&NetworkRequestPrivate::downloadComplete),
-            this, static_cast<void (NetworkRequest::*)(QByteArray, QUrl)>
-            (&NetworkRequest::downloadComplete));
-    connect(m_internal, static_cast<void (NetworkRequestPrivate::*)(QString, QUrl)>
-            (&NetworkRequestPrivate::downloadComplete),
-            this, static_cast<void (NetworkRequest::*)(QString, QUrl)>
-            (&NetworkRequest::downloadComplete));
+    connect(m_internal, static_cast<void (NetworkRequestPrivate::*)(QByteArray, QUrl)>(&NetworkRequestPrivate::downloadComplete),
+            this, static_cast<void (NetworkRequest::*)(QByteArray, QUrl)>(&NetworkRequest::downloadComplete));
+    connect(m_internal, static_cast<void (NetworkRequestPrivate::*)(QString, QUrl)>(&NetworkRequestPrivate::downloadComplete),
+            this, static_cast<void (NetworkRequest::*)(QString, QUrl)>(&NetworkRequest::downloadComplete));
     connect(m_internal, &NetworkRequestPrivate::downloadProgress,
             this, &NetworkRequest::downloadProgress);
     connect(m_internal, &NetworkRequestPrivate::uploadProgress,
@@ -164,10 +160,8 @@ QByteArray NetworkRequest::loadSync(const QUrl& _urlToLoad, const QUrl& _referer
     // Для синхронного запроса используем QEventLoop и асинхронный запрос
     //
     QEventLoop loop;
-    connect(this, &NetworkRequest::finished,
-            &loop, &QEventLoop::quit);
-    connect(m_internal, static_cast<void (NetworkRequestPrivate::*)(QByteArray, QUrl)>
-            (&NetworkRequestPrivate::downloadComplete),
+    connect(this, &NetworkRequest::finished, &loop, &QEventLoop::quit);
+    connect(m_internal, static_cast<void (NetworkRequestPrivate::*)(QByteArray, QUrl)>(&NetworkRequestPrivate::downloadComplete),
             this, &NetworkRequest::downloadCompleteData);
     loadAsync(_urlToLoad, _referer);
     loop.exec();

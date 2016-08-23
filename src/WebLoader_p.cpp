@@ -168,27 +168,21 @@ void WebLoader::run()
         } // switch
 
         connect(reply, &QNetworkReply::uploadProgress,
-                this, static_cast<void (WebLoader::*)(qint64, qint64)>
-                (&WebLoader::uploadProgress));
+                this, static_cast<void (WebLoader::*)(qint64, qint64)>(&WebLoader::uploadProgress));
         connect(reply, &QNetworkReply::downloadProgress,
-                this, static_cast<void (WebLoader::*)(qint64, qint64)>
-                (&WebLoader::downloadProgress));
-        connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>
-                (&QNetworkReply::error),
+                this, static_cast<void (WebLoader::*)(qint64, qint64)>(&WebLoader::downloadProgress));
+        connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error),
                 this, &WebLoader::downloadError);
         connect(reply, &QNetworkReply::sslErrors, this, &WebLoader::downloadSslErrors);
         connect(reply, &QNetworkReply::sslErrors, reply,
-                static_cast<void (QNetworkReply::*)()>
-                (&QNetworkReply::ignoreSslErrors));
+                static_cast<void (QNetworkReply::*)()>(&QNetworkReply::ignoreSslErrors));
 
 		//
 		// Таймер для прерывания работы
 		//
 		QTimer timeoutTimer;
-        connect(&timeoutTimer, &QTimer::timeout,
-                this, &WebLoader::quit);
-        connect(&timeoutTimer, &QTimer::timeout,
-                reply, &QNetworkReply::abort);
+        connect(&timeoutTimer, &QTimer::timeout, this, &WebLoader::quit);
+        connect(&timeoutTimer, &QTimer::timeout, reply, &QNetworkReply::abort);
 		timeoutTimer.setSingleShot(true);
         timeoutTimer.start(m_loadingTimeout);
 
@@ -341,6 +335,5 @@ void WebLoader::initNetworkManager()
 	// Настраиваем новое соединение
 	//
     connect(m_networkManager, &QNetworkAccessManager::finished,
-            this, static_cast<void (WebLoader::*)(QNetworkReply*)>
-            (&WebLoader::downloadComplete));
+            this, static_cast<void (WebLoader::*)(QNetworkReply*)>(&WebLoader::downloadComplete));
 }
