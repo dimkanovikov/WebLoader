@@ -21,7 +21,7 @@
 #include <QMutex>
 
 #include "WebLoader_p.h"
-#include "NetworkRequestInternal_p.h"
+#include "NetworkRequestPrivate_p.h"
 
 /*!
  * \brief Класс, реализующий очередь запросов
@@ -39,12 +39,12 @@ public:
     /*!
      * \brief Метод, помещающий в очередь запрос
      */
-    void put(NetworkRequestInternal*);
+    void put(NetworkRequestPrivate*);
     /*!
      * \brief Метод, останавливающий выполняющийся запрос
      * или же убирающий его из очереди
      */
-    void stop(NetworkRequestInternal*);
+    void stop(NetworkRequestPrivate*);
 
 signals:
     /*!
@@ -89,25 +89,25 @@ private:
     /*!
      * \brief Настройка параметров для WebLoader'а
      */
-    void setLoaderParams(WebLoader* _loader, NetworkRequestInternal* _request);
+    void setLoaderParams(WebLoader* _loader, NetworkRequestPrivate* _request);
     /*!
      * \brief Отключение сигналов WebLoader'а
      * от сигналов NetworkRequestInternal
      */
-    void disconnectLoaderRequest(WebLoader* _loader, NetworkRequestInternal* _request);
+    void disconnectLoaderRequest(WebLoader* _loader, NetworkRequestPrivate* _request);
     /*!
      * \brief Очередь запросов
      */
-    QList<NetworkRequestInternal*> m_queue;
+    QList<NetworkRequestPrivate*> m_queue;
     /*!
      * \brief Множество, содержащее запросы в очереди
      * Необходим для быстрого определения, находится ли запрос в очереди
      */
-    QSet<NetworkRequestInternal*> m_inQueue;
+    QSet<NetworkRequestPrivate*> m_inQueue;
     /*!
      * \brief WebLoader'ы, выполняющие запрос и соответствующие им запросы
      */
-    QMap<WebLoader*, NetworkRequestInternal*> m_busyLoaders;
+    QMap<WebLoader*, NetworkRequestPrivate*> m_busyLoaders;
     /*!
      * \brief Список свободных WebLoader'ов
      */

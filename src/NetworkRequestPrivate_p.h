@@ -14,8 +14,8 @@
 * Full license: http://dimkanovikov.pro/license/LGPLv3
 */
 
-#ifndef NETWORKREQUESTINTERNAL_H
-#define NETWORKREQUESTINTERNAL_H
+#ifndef NETWORKREQUESTPRIVATE_H
+#define NETWORKREQUESTPRIVATE_H
 
 #include <QObject>
 
@@ -27,12 +27,12 @@
  * Для упрощения взаимодействия данные класса являются public
  */
 
-class NetworkRequestInternal : public QObject
+class NetworkRequestPrivate : public QObject
 {
     Q_OBJECT
 public:
-    explicit NetworkRequestInternal(QObject* _parent = 0, QNetworkCookieJar* _jar = 0);
-    ~NetworkRequestInternal();
+    explicit NetworkRequestPrivate(QObject* _parent = 0, QNetworkCookieJar* _jar = 0);
+    ~NetworkRequestPrivate();
 
     QUrl m_urlToLoad;
     QUrl m_referer;
@@ -67,4 +67,4 @@ signals:
 public slots:
 };
 
-#endif // NETWORKREQUESTINTERNAL_H
+#endif // NETWORKREQUESTPRIVATE_H

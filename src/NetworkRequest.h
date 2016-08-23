@@ -21,7 +21,7 @@
 #include <QTimer>
 
 #include "NetworkQueue_p.h"
-#include "NetworkRequestInternal_p.h"
+#include "NetworkRequestPrivate_p.h"
 
 /*!
  * \brief Пользовательский класс для создания GET и POST запросов
@@ -134,7 +134,7 @@ private:
     /*!
      * \brief Объект, используемый в очереди запросов
      */
-    NetworkRequestInternal m_internal;
+    NetworkRequestPrivate m_internal;
     /*!
      * \brief Загруженные данные в случае, если используется синхронная загрузка
      */

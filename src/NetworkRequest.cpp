@@ -22,23 +22,23 @@ NetworkRequest::NetworkRequest(QObject* _parent, QNetworkCookieJar* _jar)
     //
     // Соединим сигналы от internal с сигналами/слотами этого класса
     //
-    connect(&m_internal, static_cast<void (NetworkRequestInternal::*)(QByteArray, QUrl)>
-            (&NetworkRequestInternal::downloadComplete),
+    connect(&m_internal, static_cast<void (NetworkRequestPrivate::*)(QByteArray, QUrl)>
+            (&NetworkRequestPrivate::downloadComplete),
             this, static_cast<void (NetworkRequest::*)(QByteArray, QUrl)>
             (&NetworkRequest::downloadComplete));
-    connect(&m_internal, static_cast<void (NetworkRequestInternal::*)(QString, QUrl)>
-            (&NetworkRequestInternal::downloadComplete),
+    connect(&m_internal, static_cast<void (NetworkRequestPrivate::*)(QString, QUrl)>
+            (&NetworkRequestPrivate::downloadComplete),
             this, static_cast<void (NetworkRequest::*)(QString, QUrl)>
             (&NetworkRequest::downloadComplete));
-    connect(&m_internal, &NetworkRequestInternal::downloadProgress,
+    connect(&m_internal, &NetworkRequestPrivate::downloadProgress,
             this, &NetworkRequest::downloadProgress);
-    connect(&m_internal, &NetworkRequestInternal::uploadProgress,
+    connect(&m_internal, &NetworkRequestPrivate::uploadProgress,
             this, &NetworkRequest::uploadProgress);
-    connect(&m_internal, &NetworkRequestInternal::error,
+    connect(&m_internal, &NetworkRequestPrivate::error,
             this, &NetworkRequest::slotError);
-    connect(&m_internal, &NetworkRequestInternal::errorDetails,
+    connect(&m_internal, &NetworkRequestPrivate::errorDetails,
             this, &NetworkRequest::slotErrorDetails);
-    connect(&m_internal, &NetworkRequestInternal::finished,
+    connect(&m_internal, &NetworkRequestPrivate::finished,
             this, &NetworkRequest::finished);
 
 }
@@ -162,8 +162,8 @@ QByteArray NetworkRequest::loadSync(const QUrl& _urlToLoad, const QUrl& _referer
     QEventLoop loop;
     connect(this, &NetworkRequest::finished,
             &loop, &QEventLoop::quit);
-    connect(&m_internal, static_cast<void (NetworkRequestInternal::*)(QByteArray, QUrl)>
-            (&NetworkRequestInternal::downloadComplete),
+    connect(&m_internal, static_cast<void (NetworkRequestPrivate::*)(QByteArray, QUrl)>
+            (&NetworkRequestPrivate::downloadComplete),
             this, &NetworkRequest::downloadCompleteData);
     loadAsync(_urlToLoad, _referer);
     loop.exec();
@@ -206,4 +206,21 @@ void NetworkRequest::stop()
 QString NetworkRequest::lastErrorDetails() const
 {
     return m_lastErrorDetails;
+}
+
+NetworkRequestPrivate::NetworkRequestPrivate(QObject* _parent, QNetworkCookieJar* _jar)
+    : QObject(_parent), m_cookieJar(_jar), m_loadingTimeout(20000), m_request(new WebRequest())
+
+{
+
+}
+
+NetworkRequestPrivate::~NetworkRequestPrivate()
+{
+    delete m_request;
+}
+
+void NetworkRequestPrivate::done()
+{
+    emit finished();
 }

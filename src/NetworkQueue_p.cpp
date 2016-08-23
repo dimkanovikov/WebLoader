@@ -34,7 +34,7 @@ NetworkQueue* NetworkQueue::getInstance() {
     return &queue;
 }
 
-void NetworkQueue::put(NetworkRequestInternal* _request) {
+void NetworkQueue::put(NetworkRequestPrivate* _request) {
     m_mtx.lock();
     //
     // Положим в очередь пришедший запрос
@@ -62,7 +62,7 @@ void NetworkQueue::pop() {
     //
     // Извлечем первый запрос на обработку
     //
-    NetworkRequestInternal *request = m_queue.front();
+    NetworkRequestPrivate *request = m_queue.front();
     m_queue.pop_front();
     m_inQueue.remove(request);
 
@@ -77,22 +77,22 @@ void NetworkQueue::pop() {
     //
     connect(loader, static_cast<void (WebLoader::*)(QByteArray, QUrl)>
             (&WebLoader::downloadComplete),
-            request, static_cast<void (NetworkRequestInternal::*)(QByteArray, QUrl)>
-            (&NetworkRequestInternal::downloadComplete));
+            request, static_cast<void (NetworkRequestPrivate::*)(QByteArray, QUrl)>
+            (&NetworkRequestPrivate::downloadComplete));
     connect(loader, static_cast<void (WebLoader::*)(QString, QUrl)>
             (&WebLoader::downloadComplete),
-            request, static_cast<void (NetworkRequestInternal::*)(QString, QUrl)>
-            (&NetworkRequestInternal::downloadComplete));
+            request, static_cast<void (NetworkRequestPrivate::*)(QString, QUrl)>
+            (&NetworkRequestPrivate::downloadComplete));
     connect(loader, static_cast<void (WebLoader::*)(int, QUrl)>
             (&WebLoader::uploadProgress),
-            request, &NetworkRequestInternal::uploadProgress);
+            request, &NetworkRequestPrivate::uploadProgress);
     connect(loader, static_cast<void (WebLoader::*)(int, QUrl)>
             (&WebLoader::downloadProgress),
-            request, &NetworkRequestInternal::downloadProgress);
+            request, &NetworkRequestPrivate::downloadProgress);
     connect(loader, &WebLoader::error,
-            request, &NetworkRequestInternal::error);
+            request, &NetworkRequestPrivate::error);
     connect(loader, &WebLoader::errorDetails,
-            request, &NetworkRequestInternal::errorDetails);
+            request, &NetworkRequestPrivate::errorDetails);
 
     //
     // Загружаем!
@@ -100,7 +100,7 @@ void NetworkQueue::pop() {
     loader->loadAsync(request->m_request->urlToLoad(), request->m_request->urlReferer());
 }
 
-void NetworkQueue::stop(NetworkRequestInternal* _internal) {
+void NetworkQueue::stop(NetworkRequestPrivate* _internal) {
     m_mtx.lock();
     if (m_inQueue.contains(_internal)) {
         //
@@ -145,7 +145,7 @@ void NetworkQueue::stop(NetworkRequestInternal* _internal) {
     m_mtx.unlock();
 }
 
-void NetworkQueue::setLoaderParams(WebLoader* _loader, NetworkRequestInternal* request)
+void NetworkQueue::setLoaderParams(WebLoader* _loader, NetworkRequestPrivate* request)
 {
     _loader->setCookieJar(request->m_cookieJar);
     _loader->setRequestMethod(request->m_method);
@@ -154,26 +154,26 @@ void NetworkQueue::setLoaderParams(WebLoader* _loader, NetworkRequestInternal* r
 }
 
 void NetworkQueue::disconnectLoaderRequest(WebLoader* _loader,
-                                           NetworkRequestInternal* _request)
+                                           NetworkRequestPrivate* _request)
 {
     disconnect(_loader, static_cast<void (WebLoader::*)(QByteArray, QUrl)>
             (&WebLoader::downloadComplete),
-            _request, static_cast<void (NetworkRequestInternal::*)(QByteArray, QUrl)>
-            (&NetworkRequestInternal::downloadComplete));
+            _request, static_cast<void (NetworkRequestPrivate::*)(QByteArray, QUrl)>
+            (&NetworkRequestPrivate::downloadComplete));
     disconnect(_loader, static_cast<void (WebLoader::*)(QString, QUrl)>
             (&WebLoader::downloadComplete),
-            _request, static_cast<void (NetworkRequestInternal::*)(QString, QUrl)>
-            (&NetworkRequestInternal::downloadComplete));
+            _request, static_cast<void (NetworkRequestPrivate::*)(QString, QUrl)>
+            (&NetworkRequestPrivate::downloadComplete));
     disconnect(_loader, static_cast<void (WebLoader::*)(int, QUrl)>
             (&WebLoader::uploadProgress),
-            _request, &NetworkRequestInternal::uploadProgress);
+            _request, &NetworkRequestPrivate::uploadProgress);
     disconnect(_loader, static_cast<void (WebLoader::*)(int, QUrl)>
             (&WebLoader::downloadProgress),
-            _request, &NetworkRequestInternal::downloadProgress);
+            _request, &NetworkRequestPrivate::downloadProgress);
     disconnect(_loader, &WebLoader::error,
-            _request, &NetworkRequestInternal::error);
+            _request, &NetworkRequestPrivate::error);
     disconnect(_loader, &WebLoader::errorDetails,
-            _request, &NetworkRequestInternal::errorDetails);
+            _request, &NetworkRequestPrivate::errorDetails);
 }
 
 void NetworkQueue::downloadComplete()
@@ -186,7 +186,7 @@ void NetworkQueue::downloadComplete()
         // то необходимо отключить сигналы
         // и удалить из списка используемых
         //
-        NetworkRequestInternal* request = m_busyLoaders[loader];
+        NetworkRequestPrivate* request = m_busyLoaders[loader];
 
         disconnectLoaderRequest(loader, request);
         request->done();
