@@ -91,6 +91,9 @@ public:
      */
     void addRequestAttributeFile(const QString& _name, const QString& _filePath);
 
+    void setRawRequest(const QByteArray& _data);
+    void setRawRequest(const QByteArray& _data, const QString& _mime);
+
     /*!
      * \brief Асинхронная загрузка запроса
      */

@@ -70,6 +70,8 @@ public:
 	  */
     void addAttributeFile(const QString& _name, const QString& _filePath);
 
+    void setRawRequest(const QByteArray& _data);
+    void setRawRequest(const QByteArray& _data, const QString& _mime);
 	/*!
       \brief Сформированный объект класса QNetworkRequest
 	  */
@@ -111,6 +113,10 @@ private:
 		 m_urlReferer;
 	QList< QPair< QString, QVariant > > m_attributes;
 	QList< QPair< QString, QString > >  m_attributeFiles;
+
+    QByteArray m_rawData;
+    QString m_mimeRawData;
+    bool m_usedRaw;
 };
 
 #endif // WEBREQUEST_H

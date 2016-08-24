@@ -99,6 +99,18 @@ void NetworkRequest::addRequestAttributeFile(const QString& _name, const QString
     m_internal->m_request->addAttribute(_name, _filePath);
 }
 
+void NetworkRequest::setRawRequest(const QByteArray &_data)
+{
+    stop();
+    m_internal->m_request->setRawRequest(_data);
+}
+
+void NetworkRequest::setRawRequest(const QByteArray &_data, const QString &_mime)
+{
+    stop();
+    m_internal->m_request->setRawRequest(_data, _mime);
+}
+
 void NetworkRequest::loadAsync(const QString& _urlToLoad, const QUrl& _referer)
 {
     loadAsync(QUrl(_urlToLoad), _referer);

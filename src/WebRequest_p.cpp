@@ -21,6 +21,7 @@
 #include <QFile>
 #include <QStringList>
 #include <QSslConfiguration>
+#include <QMimeDatabase>
 
 //! Заголовки запроса
 const QByteArray USER_AGENT_HEADER = "User-Agent";
@@ -71,10 +72,17 @@ void WebRequest::clearAttributes()
 {
 	m_attributes.clear();
 	m_attributeFiles.clear();
+    m_rawData.clear();
 }
 
 void WebRequest::addAttribute(const QString& _name, const QVariant& _value)
 {
+    if(m_usedRaw && !m_rawData.isEmpty()) {
+        qWarning() << "You are trying to mix methods. Raw data will be cleaned";
+        m_rawData.clear();
+    }
+    m_usedRaw = false;
+
 	QPair< QString, QVariant > attribute;
     attribute.first = _name;
     attribute.second = _value;
@@ -83,10 +91,33 @@ void WebRequest::addAttribute(const QString& _name, const QVariant& _value)
 
 void WebRequest::addAttributeFile(const QString& _name, const QString& _filePath)
 {
+    if(m_usedRaw && !m_rawData.isEmpty()) {
+        qWarning() << "You are trying to mix methods. Raw data will be cleaned";
+        m_rawData.clear();
+    }
+    m_usedRaw = false;
+
 	QPair< QString, QString > attributeFile;
     attributeFile.first = _name;
     attributeFile.second = _filePath;
     addAttributeFile(attributeFile);
+}
+
+void WebRequest::setRawRequest(const QByteArray &_data)
+{
+    setRawRequest(_data, QMimeDatabase().mimeTypeForData(_data).name());
+}
+
+void WebRequest::setRawRequest(const QByteArray &_data, const QString &_mime)
+{
+    if(!m_usedRaw && (!m_attributes.isEmpty() || !m_attributeFiles.isEmpty())) {
+        qWarning() << "You are trying to mix methods. Attributes will be cleaned";
+        m_attributes.clear();
+        m_attributeFiles.clear();
+    }
+    m_usedRaw = true;
+    m_rawData = _data;
+    m_mimeRawData = _mime;
 }
 
 QNetworkRequest WebRequest::networkRequest(bool _addContentHeaders)
@@ -102,8 +133,13 @@ QNetworkRequest WebRequest::networkRequest(bool _addContentHeaders)
     request.setHeader(QNetworkRequest::ContentTypeHeader, CONTENT_TYPE_DEFAULT);
 
     if (_addContentHeaders) {
-		// ContentType
-        request.setHeader(QNetworkRequest::ContentTypeHeader, CONTENT_TYPE);
+        // ContentType
+        if(m_usedRaw) {
+            request.setHeader(QNetworkRequest::ContentTypeHeader, m_mimeRawData);
+        }
+        else {
+            request.setHeader(QNetworkRequest::ContentTypeHeader, CONTENT_TYPE);
+        }
 		// ContentLength
         request.setHeader(QNetworkRequest::ContentLengthHeader, multiPartData().size());
 	}
@@ -113,6 +149,10 @@ QNetworkRequest WebRequest::networkRequest(bool _addContentHeaders)
 
 QByteArray WebRequest::multiPartData()
 {
+    if(m_usedRaw) {
+        return m_rawData;
+    }
+
 	HttpMultiPart multiPart;
     multiPart.setBoundary(BOUNDARY);
 
