@@ -20,6 +20,23 @@
 #include "WebLoader_p.h"
 #include "WebRequest_p.h"
 
+NetworkRequestPrivate::NetworkRequestPrivate(QObject* _parent, QNetworkCookieJar* _jar)
+    : QObject(_parent), m_cookieJar(_jar), m_loadingTimeout(20000), m_request(new WebRequest())
+
+{
+
+}
+
+NetworkRequestPrivate::~NetworkRequestPrivate()
+{
+    delete m_request;
+}
+
+void NetworkRequestPrivate::done()
+{
+    emit finished();
+}
+
 NetworkRequest::NetworkRequest(QObject* _parent, QNetworkCookieJar* _jar)
     : QObject(_parent), m_internal(new NetworkRequestPrivate(this, _jar))
 {
@@ -216,21 +233,4 @@ void NetworkRequest::stop()
 QString NetworkRequest::lastErrorDetails() const
 {
     return m_lastErrorDetails;
-}
-
-NetworkRequestPrivate::NetworkRequestPrivate(QObject* _parent, QNetworkCookieJar* _jar)
-    : QObject(_parent), m_cookieJar(_jar), m_loadingTimeout(20000), m_request(new WebRequest())
-
-{
-
-}
-
-NetworkRequestPrivate::~NetworkRequestPrivate()
-{
-    delete m_request;
-}
-
-void NetworkRequestPrivate::done()
-{
-    emit finished();
 }
