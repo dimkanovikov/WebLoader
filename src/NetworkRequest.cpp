@@ -43,10 +43,7 @@ NetworkRequest::NetworkRequest(QObject* _parent, QNetworkCookieJar* _jar)
     //
     // Соединим сигналы от internal с сигналами/слотами этого класса
     //
-    connect(m_internal, static_cast<void (NetworkRequestPrivate::*)(QByteArray, QUrl)>(&NetworkRequestPrivate::downloadComplete),
-            this, static_cast<void (NetworkRequest::*)(QByteArray, QUrl)>(&NetworkRequest::downloadComplete));
-    connect(m_internal, static_cast<void (NetworkRequestPrivate::*)(QString, QUrl)>(&NetworkRequestPrivate::downloadComplete),
-            this, static_cast<void (NetworkRequest::*)(QString, QUrl)>(&NetworkRequest::downloadComplete));
+    connect(m_internal, &NetworkRequestPrivate::downloadComplete, this, &NetworkRequest::downloadComplete);
     connect(m_internal, &NetworkRequestPrivate::downloadProgress,
             this, &NetworkRequest::downloadProgress);
     connect(m_internal, &NetworkRequestPrivate::uploadProgress,

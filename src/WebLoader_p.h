@@ -86,10 +86,8 @@ signals:
 
     /*!
       \brief Данные загружены
-	  */
-    void downloadComplete(WebLoader*);
+      */
     void downloadComplete(QByteArray, QUrl);
-    void downloadComplete(QString, QUrl);
 
     /*!
       \brief Сигнал об ошибке

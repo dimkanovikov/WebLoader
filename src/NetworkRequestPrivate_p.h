@@ -60,7 +60,6 @@ signals:
      * \brief Данные загружены
      */
     void downloadComplete(QByteArray, QUrl);
-    void downloadComplete(QString, QUrl);
     void finished();
 
     /*!

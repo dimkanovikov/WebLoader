@@ -214,8 +214,6 @@ void WebLoader::run()
     } while (m_isNeedRedirect);
 
     emit downloadComplete(m_downloadedData, m_initUrl);
-    emit downloadComplete(QString(m_downloadedData), m_initUrl);
-    emit downloadComplete(this);
 }
 
 void WebLoader::stop()
