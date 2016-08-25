@@ -174,8 +174,8 @@ void WebLoader::run()
         connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error),
                 this, &WebLoader::downloadError);
         connect(reply, &QNetworkReply::sslErrors, this, &WebLoader::downloadSslErrors);
-        connect(reply, &QNetworkReply::sslErrors, reply,
-                static_cast<void (QNetworkReply::*)()>(&QNetworkReply::ignoreSslErrors));
+        connect(reply, &QNetworkReply::sslErrors,
+                reply, static_cast<void (QNetworkReply::*)()>(&QNetworkReply::ignoreSslErrors));
 
 		//
 		// Таймер для прерывания работы
