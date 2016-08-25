@@ -99,17 +99,11 @@ public:
      */
     void loadAsync(const QString& _urlToLoad, const QUrl& _referer = QUrl());
     void loadAsync(const QUrl& _urlToLoad, const QUrl& _referer = QUrl());
-    static void loadAsyncS(const QString& _urlToLoad, QObject* _object,
-                           const char* _slot, const QUrl& _referer = QUrl());
-    static void loadAsyncS(const QUrl& _urlToLoad, QObject* _object,
-                           const char* _slot, const QUrl& _referer = QUrl());
     /*!
      * \brief Синхронная загрузка запроса
      */
     QByteArray loadSync(const QString& _urlToLoad, const QUrl& _referer = QUrl());
     QByteArray loadSync(const QUrl& _urlToLoad, const QUrl& _referer = QUrl());
-    static QByteArray loadSyncS(const QUrl& _urlToLoad, const QUrl& _referer = QUrl());
-    static QByteArray loadSyncS(const QString& _urlToLoad, const QUrl& _referer = QUrl());
 
     /*!
      * \brief Получение загруженного URL

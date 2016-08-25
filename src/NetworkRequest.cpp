@@ -152,32 +152,6 @@ void NetworkRequest::loadAsync(const QUrl& _urlToLoad, const QUrl& _referer)
     nq->put(m_internal);
 }
 
-void NetworkRequest::loadAsyncS(const QString& _urlToLoad, QObject *_object,
-                                const char* _slot, const QUrl& _referer)
-{
-    loadAsyncS(QUrl(_urlToLoad), _object, _slot, _referer);
-}
-
-void NetworkRequest::loadAsyncS(const QUrl& _urlToLoad, QObject *_object,
-                               const char* _slot, const QUrl& _referer)
-{
-    NetworkRequest* request = new NetworkRequest;
-    connect(request, SIGNAL(downloadComplete(QByteArray, QUrl)), _object, _slot);
-    connect(request, &NetworkRequest::finished, request, &NetworkRequest::deleteLater);
-    request->loadAsync(_urlToLoad, _referer);
-}
-
-QByteArray NetworkRequest::loadSyncS(const QString& _urlToLoad, const QUrl& _referer)
-{
-    return loadSyncS(QUrl(_urlToLoad), _referer);
-}
-
-QByteArray NetworkRequest::loadSyncS(const QUrl& _urlToLoad, const QUrl& _referer)
-{
-    NetworkRequest request;
-    return request.loadSync(_urlToLoad, _referer);
-}
-
 QByteArray NetworkRequest::loadSync(const QString& _urlToLoad, const QUrl& _referer)
 {
     return loadSync(QUrl(_urlToLoad), _referer);
