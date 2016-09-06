@@ -68,6 +68,12 @@ It's really simple, just try!
 ## Contribution
 We really love feedback. If you have ideas for make it better, or find some bugs, or fix some bugs :), or just want to ask question - you welcome!
 
+## Discussion
+
+* https://forum.qt.io/topic/70627/high-level-wrapper-around-qnetworkaccessmanager-for-make-network-communications-easy
+* http://www.forum.crossplatform.ru/index.php?showtopic=10833
+* http://www.prog.org.ru/topic_30546_0.html
+
 ## Credits
 
 Alexey Polushkin @armijo38 and Dimka Novikov @dimkanovikov
