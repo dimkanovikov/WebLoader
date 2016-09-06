@@ -28,11 +28,9 @@ NetworkRequestLoader::loadAsync("https://github.com", [] (const QByteArray& _loa
 ```
 If you need to load thousands of web-pages this is not a problem - just load them!:)
 ```c++
-foreach (const QString& url, thousandsUrls) {
-    NetworkRequestLoader::loadAsync(url, [] (const QByteArray& _loadedData, const QUrl& _fromUrl) {
-        qDebug() << "Loaded" << _loadedData.size() << "bytes from" << _fromUrl;
-    });
-}
+NetworkRequestLoader::loadAsync(thousandsUrls, [] (const QByteArray& _loadedData, const QUrl& _fromUrl) {
+    qDebug() << "Loaded" << _loadedData.size() << "bytes from" << _fromUrl;
+});
 ```
 Don't worry about anything, library makes all work instead of you.
 
@@ -53,6 +51,17 @@ NetworkRequest request;
 requset.setRequestMethod(NetworkRequest::Post);
 request.setRawRequest("{ \"method\": \"getUsers\" }", "application/json");
 const QByteArray usersJson = request.loadSync("https://site.com/API/v2/function/");
+```
+Want to save session cookies? Just sent instance of QNetworkCookieJar class to NetworkRequest.
+```c++
+QNetworkCookieJar cookies;
+NetworkRequest request;
+request.setCookieJar(&cookies);
+request.loadSync("https://site.com/API/v1/startSession");
+
+// And in next step you can reuse this request or create new NetworkRequest and sent cookies to them
+
+request.loadSync("https://site.com/API/v1/uploadImage");
 ```
 It's really simple, just try!
 

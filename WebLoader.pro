@@ -3,6 +3,8 @@ TARGET = webloader
 DEPENDPATH += . src
 INCLUDEPATH += . src
 
+CONFIG += c++11
+
 QT += network xml
 
 HEADERS += src/HttpMultiPart_p.h \
