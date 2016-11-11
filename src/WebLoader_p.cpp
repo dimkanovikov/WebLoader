@@ -72,8 +72,10 @@ namespace {
 			case QNetworkReply::UnknownContentError: result = "an unknown error related to the remote content was detected"; break;
 			case QNetworkReply::ProtocolFailure: result = "a breakdown in protocol was detected (parsing error, invalid or unexpected responses, etc.)"; break;
 			case QNetworkReply::UnknownServerError: result = "an unknown error related to the server response was detected"; break;
+#if QT_VERSION >= 0x050600
 			case QNetworkReply::TooManyRedirectsError: result = "while following redirects, the maximum limit was reached. The limit is by default set to 50 or as set by QNetworkRequest::setMaxRedirectsAllowed()."; break;
 			case QNetworkReply::InsecureRedirectError: result = "while following redirects, the network access API detected a redirect from a encrypted protocol (https) to an unencrypted one (http)."; break;
+#endif
 			case QNetworkReply::NoError: result = "No error"; break;
 		}
 
