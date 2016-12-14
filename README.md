@@ -2,7 +2,7 @@
 High level wrapper around QNetworkAccessManager for make network communications easy.
 
 ## About
-Library allow you to load data from internet. You can choose how data will be loaded: asynchronously or synchronously.
+Library allow you to load everything from internet (web pages, images, archives etc.). You can choose how data will be loaded: asynchronously or synchronously.
 
 Library build on top of queue of loaders, everyone of which is simple wrapper around QNetworkAccessManager object. It means that you don't need to warn about memory management, mime types detecting or something else, library does it instead of you.
 
